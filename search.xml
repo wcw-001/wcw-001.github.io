@@ -4,6 +4,83 @@
   
     
     <entry>
+      <title>Ant Design Pro V5项目无法启动问题解决</title>
+      <link href="/2024/03/27/Ant%20Design%20Pro%20V5%E9%A1%B9%E7%9B%AE%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/"/>
+      <url>/2024/03/27/Ant%20Design%20Pro%20V5%E9%A1%B9%E7%9B%AE%E6%97%A0%E6%B3%95%E5%90%AF%E5%8A%A8%E9%97%AE%E9%A2%98%E8%A7%A3%E5%86%B3/</url>
+      
+        <content type="html"><![CDATA[<p>问题：</p><p>​    今天准备使用一下Ant Design Pro做项目，全程按照官网文档步骤来进行项目搭建，在这里我使用的node.js版本是16.15.0，npm版本是8.5.5，当我第一次ant design pro来做一个属于我自己的管理系统时突然发现ant design竟然运行不了，试n个方法后…,终于找到了解决方案</p><p><img src="http://img.wcw231407.cn/202403271836503.png" alt="40db0d7f0dd543ce84f23d4f8233adf6.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>解决方案1：</p><p>​    删除index.md，把依赖删掉和umi文件夹删除，yarn(yarnpkg代替也行)一下，然后运行</p><p>解决方式2：</p><p>​    umi版本选择4(不太建议使⽤ umi 4 了，兼容性不好。可以忽略， 不影响后续的学习)</p><p><img src="http://img.wcw231407.cn/202403271837992.png" alt="ce17ae27a8234673888142b4fc3c7deb.png"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Bug </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> ant design pro </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>每次请求sessionId变化【SpringBoot+Vue】</title>
+      <link href="/2024/03/27/%E6%AF%8F%E6%AC%A1%E8%AF%B7%E6%B1%82sessionId%E5%8F%98%E5%8C%96%E3%80%90SpringBoot+Vue%E3%80%91/"/>
+      <url>/2024/03/27/%E6%AF%8F%E6%AC%A1%E8%AF%B7%E6%B1%82sessionId%E5%8F%98%E5%8C%96%E3%80%90SpringBoot+Vue%E3%80%91/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p> 引言：花了一晚上的时间，终于把问题解决了，一开始后端做完后,用apifox所有接口测试都是可以的,但当前端跑起来后发现接收不到后端的数据。</p></blockquote><p>当我写完前后端，主页面和获取当前页面信息接口后，配置了cros注解</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@CrossOrigin</span><br></pre></td></tr></table></figure><p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>我一开始使用接口文档做了后端接口测试，测试发现当访问主页面时前端能成功接受到数据,本以为皆大欢喜了，在当我接入获取当前信息接口时并测试时发现获取不到信息，我又使用apifox进行测试接口能够获取到数据，于是我使用F12进行调试。</p><p>登录：</p><p><img src="http://img.wcw231407.cn/202403271832481.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>获取当前信息：</p><p><img src="http://img.wcw231407.cn/202403271832630.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>浏览器第一次访问时会获得sessionid存在cookie中,后续访问如果有session存着,获取当前信息时会直接用，但是并没有，由上面可以知道后端重新返回了一个sessionId给前端，导致访问后端时由于sessionId不匹配，最终无法获取到登录账号的当前用户信息。</p><p><strong>然后又经过多次调试,最终解决了这个问题,下面把方案放上来：</strong></p><p>首先是前端,在vue的main.js中加上这个</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">axios.defaults.withCredentials = true;</span><br></pre></td></tr></table></figure><p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>在后端用配置类解决跨域问题</p><p>另一方面是corsfilter,这个会先于拦截器执行,解决跨域问题</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package com.wcw.usercenter.config;</span><br><span class="line">import org.springframework.context.annotation.Bean;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.web.cors.CorsConfiguration;</span><br><span class="line">import org.springframework.web.cors.UrlBasedCorsConfigurationSource;</span><br><span class="line">import org.springframework.web.filter.CorsFilter;</span><br><span class="line">@Configuration</span><br><span class="line">public class CorsConfig &#123;</span><br><span class="line">    private CorsConfiguration corsConfig()&#123;</span><br><span class="line">        CorsConfiguration corsConfiguration = new CorsConfiguration();</span><br><span class="line">        corsConfiguration.addAllowedHeader(&quot;*&quot;); //允许所有请求头</span><br><span class="line">        corsConfiguration.addAllowedMethod(&quot;*&quot;); //允许所有请求方法</span><br><span class="line">        corsConfiguration.setAllowCredentials(true);//是否允许证书</span><br><span class="line">        corsConfiguration.addAllowedOrigin(&quot;http://localhost:5173/&quot;); //允许所有的请求类型</span><br><span class="line">        corsConfiguration.setMaxAge(3600L);</span><br><span class="line">        return corsConfiguration;</span><br><span class="line">    &#125;</span><br><span class="line">    @Bean</span><br><span class="line">    public CorsFilter corsFilter()&#123;</span><br><span class="line">        //存储request与跨域配置信息的容器，基于url的映射</span><br><span class="line">        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();</span><br><span class="line">        source.registerCorsConfiguration(&quot;/**&quot;,corsConfig());</span><br><span class="line">        return new CorsFilter(source);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Bug </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Session </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>WebSocket</title>
+      <link href="/2024/03/27/WebSocket/"/>
+      <url>/2024/03/27/WebSocket/</url>
+      
+        <content type="html"><![CDATA[<blockquote><p>什么是消息推送（push）</p><p>推送的场景比较多，比如有人关注我的公众号，这时我就会收到一条推送消息，以此来吸引我点击打开应用。</p><p>消息推送(push)通常是指网站的运营工作等人员，通过某种工具对用户当前网页或移动设备APP进行的主动消息推送。</p><p>消息推送一般又分为web端消息推送和移动端消息推送。</p></blockquote><h1 id="消息推送常见方式"><a href="#消息推送常见方式" class="headerlink" title="消息推送常见方式"></a>消息推送常见方式</h1><h2 id="短轮询"><a href="#短轮询" class="headerlink" title="短轮询"></a>短轮询</h2><p>浏览器以指定的时间间隔向服务器发出HTTP请求，服务器实时返回数据给浏览器</p><p><img src="http://img.wcw231407.cn/202403271827767.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><h2 id="长轮询"><a href="#长轮询" class="headerlink" title="长轮询"></a>长轮询</h2><p>浏览器浏览器发出ajax请求，服务器端接收到请求，会阻塞请求直到有数据或者超时才返回</p><p><img src="http://img.wcw231407.cn/202403271827597.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><h2 id="SSE（服务发送事件）"><a href="#SSE（服务发送事件）" class="headerlink" title="SSE（服务发送事件）"></a>SSE（服务发送事件）</h2><ul><li>SSE在服务器和客户端之间打开一个单向通道</li><li>服务器响应的不再是一次性的数据包，而是text&#x2F;event-stream类型的数据流消息</li><li>服务器有数据变更时将数据流式传输客户端</li></ul><p><img src="http://img.wcw231407.cn/202403271827390.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><h2 id="websocket"><a href="#websocket" class="headerlink" title="websocket"></a>websocket</h2><p>websocket是一种在基于TCP连接上进行全双工通信的协议</p><p><img src="http://img.wcw231407.cn/202403271827475.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>全双工：允许数据在两个方向上同时传输。</p><p>半双工：允许数据在两个方向上传输，但是同一个时间段内只允许一个方向传输</p><h1 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h1><h2 id="WebSocket介绍"><a href="#WebSocket介绍" class="headerlink" title="WebSocket介绍"></a>WebSocket介绍</h2><p>Websocket是一种网络通信协议。RFC6455定义它的通信标准。</p><p>WebSocket是一种HTML5开始提供的一种在单个TCP连接上进行全双工通讯的协议</p><blockquote><p>HTTP协议是一种无状态的、无连接的、单向的应用层协议。它采取了请求&#x2F;响应模型。通信请求只能由客户端发起，服务端对请求做出应答处理。</p><p>这种通信模型有一个弊端：HTTP协议无法实现服务器主动向客户端发起消息。</p><p>这种单向请求的特点，注定如果服务器有连续的状态变化，客户端要获知就非常麻烦。大多数Web应用程序将通过频繁的异步AJAX请求实现长轮询。轮询的效率低，非常浪费资源（因为必须不停的连接，或者HTTP连接始终打开）</p></blockquote><p><strong>http协议与webSocket区别：</strong></p><p>http协议：</p><p><img src="http://img.wcw231407.cn/202403271827311.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>websocket协议：</p><p><img src="http://img.wcw231407.cn/202403271827697.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><h2 id="webSocket协议"><a href="#webSocket协议" class="headerlink" title="webSocket协议"></a>webSocket协议</h2><p>本协议有两部分：握手和数据传输。</p><p>握手是基于http协议的。</p><p>来自客户端的握手看起来像如下形式：</p><p><img src="http://img.wcw231407.cn/202403271827392.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>来自服务器的握手看起来像如下形式（响应）：</p><p><img src="http://img.wcw231407.cn/202403271827751.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>响应行为101说明建立连接成功</p><p>字段说明：</p><p><img src="http://img.wcw231407.cn/202403271827193.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><h2 id="客户端（浏览器）实现"><a href="#客户端（浏览器）实现" class="headerlink" title="客户端（浏览器）实现"></a>客户端（浏览器）实现</h2><p>websocket对象</p><p>实现webSockets的Web浏览器将通过WebSocketu对象公开所有必须的客户端功能（主要指支持Html5的浏览器）。</p><p>以下API用于创建WebSocket对象：</p><p>var ws &#x3D; new WebSocket(url);</p><p>参数url格式说明: ws:&#x2F;&#x2F;ip地址:端口号&#x2F;资源名称</p><p>websocket事件</p><p>webSocket对象的相关事件</p><p><img src="http://img.wcw231407.cn/202403271827536.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p>WebSocket方法</p><p>WebSocket对象的相关方法：</p><p><img src="http://img.wcw231407.cn/202403271827755.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><h2 id="服务端实现"><a href="#服务端实现" class="headerlink" title="服务端实现"></a>服务端实现</h2><p>Tomcat的7.0.5版本开始支持WebSocket，并且实现了JavaWebket规范（JSR356）</p><p>Java WebSocket应用由一系列的websocketEndpoint组成。Endpoint是一个java对象，代表WebSocket链接的一端，对于服务端，我们可以通过两种方式定义Endpoint：</p><ul><li>第一种是编程式，即继承类javax.websocket.Endpoint并实现其方法。</li><li>第二种是注解式，即定义一个POJO，并添加@ServerEndpoint相关注解</li></ul><p>Endpoint实例在WebSocket握手时创建，并在客户端与服务端链接关闭时结束。在Endpoint接口中明确定义了与其生命周期相关的方法，规范实现者确保生命周期的各个阶段调用实例相关的方法。生命周期如下：</p><p><img src="http://img.wcw231407.cn/202403271827091.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p><p><strong>服务端如何接收客户端发送的数据呢？</strong></p><p>通过Session添加MessageHandler消息处理器来接收消息，当采用注解方式定义Endpoint时，我们可以通过@onMessage注解指定接收消息的方法</p><p><strong>服务器端如何推送数据给客户端呢？</strong></p><p>发送消息则由RemoteEndpoint完成，其实例由Session维护，使用情况，我们可以通过Session.getBasicRemote获取同步消息发送的实例，然后调用其sendXxx（）方法就可以发送消息，可以通过Session.getAsyncRemote获取异步消息发送实例。</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 网络协议 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> websocket </tag>
+            
+            <tag> http </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>JDBC（下）</title>
       <link href="/2024/03/27/JDBC%EF%BC%88%E4%B8%8B%EF%BC%89/"/>
       <url>/2024/03/27/JDBC%EF%BC%88%E4%B8%8B%EF%BC%89/</url>
