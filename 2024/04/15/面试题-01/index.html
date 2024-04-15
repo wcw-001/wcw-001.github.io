@@ -1,0 +1,319 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><!--meta(name="referrer" content="no-referrer")--><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>面试题-01 | Fancydog‘s blogs</title><!--meta(name="author" content=pageAuthor)--><meta name="copyright" content="wcw"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1、JDK 和 JRE 和 JVM 分别是什么，有什么区别？JDK（Java Development Kit，Java 软件开发工具包） JDK（Java Development Kit）：JDK 是 Java 开发⼯具包，包含了编写、编译、调试和运⾏ Java 程序所需的所有⼯具和组件（包含了JRE和一些java开发工具），⽐如编译器（javac）、Java API、调试⼯具等。JDK 是针对">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试题-01">
+<meta property="og:url" content="https://user.wcw231407.cn/2024/04/15/%E9%9D%A2%E8%AF%95%E9%A2%98-01/index.html">
+<meta property="og:site_name" content="Fancydog‘s blogs">
+<meta property="og:description" content="1、JDK 和 JRE 和 JVM 分别是什么，有什么区别？JDK（Java Development Kit，Java 软件开发工具包） JDK（Java Development Kit）：JDK 是 Java 开发⼯具包，包含了编写、编译、调试和运⾏ Java 程序所需的所有⼯具和组件（包含了JRE和一些java开发工具），⽐如编译器（javac）、Java API、调试⼯具等。JDK 是针对">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://img.wcw231407.cn/91e315aa-b4cd-41b6-b7f7-909ed5c62b71.jpg">
+<meta property="article:published_time" content="2024-04-15T12:55:03.000Z">
+<meta property="article:modified_time" content="2024-04-15T13:02:55.058Z">
+<meta property="article:author" content="wcw">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://img.wcw231407.cn/91e315aa-b4cd-41b6-b7f7-909ed5c62b71.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://user.wcw231407.cn/2024/04/15/%E9%9D%A2%E8%AF%95%E9%A2%98-01/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: wcw","link":"链接: ","source":"来源: Fancydog‘s blogs","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '面试题-01',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-15 21:02:55'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.0.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('http://img.wcw231407.cn/91e315aa-b4cd-41b6-b7f7-909ed5c62b71.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Fancydog‘s blogs"><span class="site-name">Fancydog‘s blogs</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">面试题-01</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-15T12:55:03.000Z" title="发表于 2024-04-15 20:55:03">2024-04-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-15T13:02:55.058Z" title="更新于 2024-04-15 21:02:55">2024-04-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E7%BB%8F/">面经</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="面试题-01"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="1、JDK-和-JRE-和-JVM-分别是什么，有什么区别？"><a href="#1、JDK-和-JRE-和-JVM-分别是什么，有什么区别？" class="headerlink" title="1、JDK 和 JRE 和 JVM 分别是什么，有什么区别？"></a>1、JDK 和 JRE 和 JVM 分别是什么，有什么区别？</h1><p><strong>JDK（Java Development Kit，Java 软件开发工具包）</strong></p>
+<p>JDK（Java Development Kit）：JDK 是 Java 开发⼯具包，包含了编写、编译、调试和运⾏ Java 程序所需的所有⼯具和组件（包含了JRE和一些java开发工具），⽐如编译器（javac）、Java API、调试⼯具等。JDK 是针对 Java 开发⼈员的，它包含了 JRE，还有编译器和其他⼯具，可以⽤来编写和调试 Java 程序。</p>
+<p><strong>JRE（Java Runtime Environment，Java 运行环境）</strong></p>
+<p>JRE 是 Java 运⾏时环境，包括了 Java 虚拟机（JVM）和 Java 标准类 库（Java API）。JRE 是针对 Java 应⽤程序的，它提供了在计算机上运⾏ Java 应⽤程序所需的最⼩环境。</p>
+<p><strong>JVM（Java Virtual Machine，Java 虚拟机）</strong></p>
+<p>JVM 是 Java 虚拟机，JVM是JRE的一部分。它是一个虚构出来的计算机，是通过在实际的计算机上仿真模拟各种计算机功能来实现的。在Java虚拟机上⽣成可运⾏的字 节码，移植到在其他平台上时可不加修改地运⾏</p>
+<p><strong>三者之间区别：</strong></p>
+<p>​    1.JDK是Java开发工具包含了java运行环境和java开发工具</p>
+<p>​    2.JRE是Java运行时环境，包括了java核心类库。</p>
+<p>​    3.JVM是java环境（jre）的一部分，是跨平台核心部分，可运行java核心代码</p>
+<blockquote>
+<p>Java开发⼯具包&#x3D;Java 运⾏环境+Java开发⼯具</p>
+<p>Java 运⾏环境&#x3D;Java虚拟机+Java核⼼类库</p>
+</blockquote>
+<h1 id="2、什么是字节码？采用字节码的最大好处是什么？"><a href="#2、什么是字节码？采用字节码的最大好处是什么？" class="headerlink" title="2、什么是字节码？采用字节码的最大好处是什么？"></a>2、什么是字节码？采用字节码的最大好处是什么？</h1><p>字节码是JVM可以理解的代码就叫做字节码（即源程序(.java文件)通过编译产生的产物（.class文件）），它不面向任何特定的处理器，只面向JVM，而且，由于字节码并不针对一种特定的机器，因此，Java 程序无须重新编译便可在多种不同操作系统的计算机上运行</p>
+<p>好处：</p>
+<ul>
+<li>可移植性：由于字节码是中间代码，并不针对一种特定的机器，因此Java程序无须重新编译就可以在多种操作系统的计算机上运行（不同的操作系统和硬件平台可能需要不同的JVM实现，但是它们都可以执行相同的字节码程序）。</li>
+<li>安全性：由于字节码需要在JVM中运行，所以可以对字节码进行安全检查，以确保程序不会对系统造成威胁</li>
+<li>性能：由于字节码是⼀种紧凑的⼆进制格式，相⽐于直接编译为机器码，可以更快地加载和传输，同时也可以 在运⾏时进⾏动态优化，提⾼程序的执⾏效率。</li>
+<li>可读性：相⽐于直接编译为机器码，字节码具有更好的可读性，可以⽅便地进⾏反汇编和调试。</li>
+</ul>
+<p><img src="https://img.wcw231407.cn/202404152059393.png" alt="img"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动">编辑</p>
+<h1 id="3、什么是数据库事务？讲一下事务的-ACID-特性？"><a href="#3、什么是数据库事务？讲一下事务的-ACID-特性？" class="headerlink" title="3、什么是数据库事务？讲一下事务的 ACID 特性？"></a>3、什么是数据库事务？讲一下事务的 ACID 特性？</h1><p>事务是若干个SQL语句构成的一个操作序列，这些操作表示一个完整的功能，并且需要保证功能的完整性，因此要求在该事务中要求所有的sql要么都执行，要么都不执行，是一个不可分割的整体单位。（简单来说就是由多个小任务的组成的任务）</p>
+<p><strong>事务的ACID特性</strong></p>
+<ul>
+<li>原子性（Atomicity）：事务是一个不可分割的整体，所有操作要么全做，要么全不做；只要事务中有一个操作出错，回滚到事务开始前的状态的话，那么之前已经执行的所有操作都是无效的，都应该回滚到开始前的状态。</li>
+<li>一致性（Consistency）：事务开始前和结束后，数据库的完整性约束没有被破坏 。比如A向B转账，不可能A扣了钱，B却没收到。</li>
+<li>隔离性（Isolation）：同一时间，只允许一个事务请求同一数据，不同的事务之间彼此没有任何干扰。比如A正在从一张银行卡中取钱，在A取钱结束前，B不能向这张卡转账。</li>
+<li>持久性（Durability）：事务一旦被提交后，事务对数据库的所有更新将被永远保存到数据库，不能回滚。</li>
+</ul>
+<h1 id="4、Java-和-C-、Go-语⾔的区别，各⾃的优缺点？"><a href="#4、Java-和-C-、Go-语⾔的区别，各⾃的优缺点？" class="headerlink" title="4、Java 和 C++、Go 语⾔的区别，各⾃的优缺点？"></a>4、Java 和 C++、Go 语⾔的区别，各⾃的优缺点？</h1><p><strong>Java优点：</strong></p>
+<ul>
+<li>平台性强(跨平台)：Java 虚拟机（JVM）可以在不同的操作系统上运⾏ Java 程序，使得开发者可以编写⼀次代 码并在多个平台上运⾏</li>
+<li>安全性⾼：Java 有很多安全特性，例如⾃动内存管理、类的访问权限控制、异常处理等，可以有效避免⼀些 常⻅的安全漏洞；</li>
+<li>⽣态系统完备：Java 的⽣态系统⾮常完善，有很多成熟的框架和⼯具可以帮助开发者快速构建复杂的应⽤。</li>
+</ul>
+<p>​    <strong>缺点：</strong></p>
+<ul>
+<li>由于JVM的存在，运⾏速度相对较慢</li>
+<li>对于实时性要求较⾼的场景，Java的表现可能不如C++和Go</li>
+</ul>
+<p><strong>go语言优点：</strong></p>
+<ul>
+<li>⾼并发，天⽣⽀持协程，能够轻松编写⾼效的并发程序</li>
+<li>简单易学，语法简洁，上⼿容易</li>
+<li>静态类型语⾔，可以避免⼀些潜在的运⾏时错误</li>
+<li>快速编译，可以快速构建和部署应⽤程序</li>
+</ul>
+<p>​    <strong>缺点：</strong></p>
+<ul>
+<li>缺乏丰富的类库，与 Java 和 C++ 相⽐有些不⾜</li>
+<li>在⼀些性能要求极⾼的场景中可能不如 C++ 表现</li>
+<li>语⾔本身还⽐较年轻，相关⽣态和⼯具还需要进⼀步完善</li>
+</ul>
+<p><strong>C++优点：</strong></p>
+<ul>
+<li>速度快，适合编写需要⾼性能的应⽤程序</li>
+<li>应⽤⼴泛，特别是在游戏开发、操作系统和嵌⼊式系统开发⽅⾯</li>
+<li>灵活性⾼，可以直接访问硬件和内存</li>
+</ul>
+<p>​    <strong>缺点：</strong></p>
+<ul>
+<li>学习难度较⾼，需要掌握指针、内存管理等底层知识</li>
+<li>容易出现内存泄漏和指针错误等问题</li>
+<li>编写代码过程中需要更多的⼿动管理，相⽐ Java 更容易出错</li>
+</ul>
+<h1 id="5、Java-中-final-关键字有什么用？"><a href="#5、Java-中-final-关键字有什么用？" class="headerlink" title="5、Java 中 final 关键字有什么用？"></a>5、Java 中 final 关键字有什么用？</h1><p>1.final 修饰类，表示该类不能被继承。final 类中的⽅法默认都是 final 的，不能被⼦类重写。</p>
+<ol start="2">
+<li>final 修饰⽅法，表示该⽅法不能被⼦类重写。</li>
+<li>final 修饰变量，表示该变量只能被赋值⼀次。final 修饰的变量必须在声明时或构造函数中初始化，且不能再 被修改。常⽤于定义常量。</li>
+</ol>
+<p>4.确保对象引⽤不可变，在对象引⽤声明前加上 final 关键字，可以确保该引⽤指向的对象不能被改变，但是该对象的内容可以被改变。例如，final MyClass obj &#x3D; new MyClass(); 将 obj 声明为⼀个不可变引⽤，指向⼀个可变的 MyClass 对象。</p>
+<blockquote>
+<p>何为”不可变的对象引用”呢？</p>
+<p>​    final只保证引用类型变量所引用的地址不会改变，即一直引用同一个对象，但是这个对象的内容(对象的非final成员变量的值可以改变)完全可以发生改变（比如final int[] intArray;，intArray不允许再引用其他对象，但是intArray内的int值却可以被修改）</p>
+</blockquote>
+<blockquote>
+<p>使⽤ final 修饰的变量在编译时就已经确定了其值，因此在运⾏时访问时⽐⾮ final 变量更快。 </p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn">wcw</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn/2024/04/15/%E9%9D%A2%E8%AF%95%E9%A2%98-01/">https://user.wcw231407.cn/2024/04/15/%E9%9D%A2%E8%AF%95%E9%A2%98-01/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://user.wcw231407.cn" target="_blank">Fancydog‘s blogs</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Java/">Java</a></div><div class="post_share"><div class="social-share" data-image="http://img.wcw231407.cn/91e315aa-b4cd-41b6-b7f7-909ed5c62b71.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="avatar"/></div><div class="author-info__name">wcw</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">21</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">34</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">10</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcw-001"><i></i><span>🛴前往小家...</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wcw-001" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:2314075528@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_59400558?type=blog" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=3227698318&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1%E3%80%81JDK-%E5%92%8C-JRE-%E5%92%8C-JVM-%E5%88%86%E5%88%AB%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%8C%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">1、JDK 和 JRE 和 JVM 分别是什么，有什么区别？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#2%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E5%AD%97%E8%8A%82%E7%A0%81%EF%BC%9F%E9%87%87%E7%94%A8%E5%AD%97%E8%8A%82%E7%A0%81%E7%9A%84%E6%9C%80%E5%A4%A7%E5%A5%BD%E5%A4%84%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">2、什么是字节码？采用字节码的最大好处是什么？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#3%E3%80%81%E4%BB%80%E4%B9%88%E6%98%AF%E6%95%B0%E6%8D%AE%E5%BA%93%E4%BA%8B%E5%8A%A1%EF%BC%9F%E8%AE%B2%E4%B8%80%E4%B8%8B%E4%BA%8B%E5%8A%A1%E7%9A%84-ACID-%E7%89%B9%E6%80%A7%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">3、什么是数据库事务？讲一下事务的 ACID 特性？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#4%E3%80%81Java-%E5%92%8C-C-%E3%80%81Go-%E8%AF%AD%E2%BE%94%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%8C%E5%90%84%E2%BE%83%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">4、Java 和 C++、Go 语⾔的区别，各⾃的优缺点？</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#5%E3%80%81Java-%E4%B8%AD-final-%E5%85%B3%E9%94%AE%E5%AD%97%E6%9C%89%E4%BB%80%E4%B9%88%E7%94%A8%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">5、Java 中 final 关键字有什么用？</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('http://img.wcw231407.cn/91e315aa-b4cd-41b6-b7f7-909ed5c62b71.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By wcw</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="false"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 190px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 160px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<div id="workboard"></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":"ture"},"rect":"opacity:0.7","dialog":{"enable":true,"hitokoto":true,"text":["一切的一切只是开始"]},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
