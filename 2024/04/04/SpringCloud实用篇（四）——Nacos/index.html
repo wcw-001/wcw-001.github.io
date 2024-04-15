@@ -1,0 +1,437 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><!--meta(name="referrer" content="no-referrer")--><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringCloud实用篇（四）——注册中心 | Fancydog‘s blogs</title><!--meta(name="author" content=pageAuthor)--><meta name="copyright" content="wcw"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Nacosnacos官方网站：https:&#x2F;&#x2F;nacos.io&#x2F; nacos是阿里巴巴的产品，现在是springcloud的一个组件，相比于eureka的功能更加丰富，在国内备受欢迎 nacos的安装下载地址：https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;nacos&#x2F;releases&#x2F;  启动方式： 1.双击如图所示：  2.cmd指令启动  服务注册到nacos1.引入spring-co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud实用篇（四）——注册中心">
+<meta property="og:url" content="https://user.wcw231407.cn/2024/04/04/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94Nacos/index.html">
+<meta property="og:site_name" content="Fancydog‘s blogs">
+<meta property="og:description" content="Nacosnacos官方网站：https:&#x2F;&#x2F;nacos.io&#x2F; nacos是阿里巴巴的产品，现在是springcloud的一个组件，相比于eureka的功能更加丰富，在国内备受欢迎 nacos的安装下载地址：https:&#x2F;&#x2F;github.com&#x2F;alibaba&#x2F;nacos&#x2F;releases&#x2F;  启动方式： 1.双击如图所示：  2.cmd指令启动  服务注册到nacos1.引入spring-co">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.wcw231407.cn/202404041147113.jpg">
+<meta property="article:published_time" content="2024-04-04T03:43:48.000Z">
+<meta property="article:modified_time" content="2024-04-14T07:02:18.428Z">
+<meta property="article:author" content="wcw">
+<meta property="article:tag" content="注册中心">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.wcw231407.cn/202404041147113.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://user.wcw231407.cn/2024/04/04/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94Nacos/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: wcw","link":"链接: ","source":"来源: Fancydog‘s blogs","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringCloud实用篇（四）——注册中心',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-14 15:02:18'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.0.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img.wcw231407.cn/202404041147113.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Fancydog‘s blogs"><span class="site-name">Fancydog‘s blogs</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringCloud实用篇（四）——注册中心</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-04T03:43:48.000Z" title="发表于 2024-04-04 11:43:48">2024-04-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-14T07:02:18.428Z" title="更新于 2024-04-14 15:02:18">2024-04-14</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%BE%AE%E6%9C%8D%E5%8A%A1/">微服务</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>15分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringCloud实用篇（四）——注册中心"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="Nacos"><a href="#Nacos" class="headerlink" title="Nacos"></a><strong>Nacos</strong></h1><p>nacos官方网站：<a target="_blank" rel="noopener" href="https://nacos.io/">https://nacos.io/</a></p>
+<p>nacos是阿里巴巴的产品，现在是springcloud的一个组件，相比于eureka的功能更加丰富，在国内备受欢迎</p>
+<h2 id="nacos的安装"><a href="#nacos的安装" class="headerlink" title="nacos的安装"></a><strong>nacos的安装</strong></h2><p>下载地址：<a target="_blank" rel="noopener" href="https://github.com/alibaba/nacos/releases/">https://github.com/alibaba/nacos/releases/</a></p>
+<p><img src="http://img.wcw231407.cn/202404041052874.png" alt="image-20240404105216248"></p>
+<p><strong>启动方式：</strong></p>
+<p>1.双击如图所示：</p>
+<p><img src="http://img.wcw231407.cn/202404041053422.png" alt="image-20240404105314281"></p>
+<p>2.cmd指令启动</p>
+<p><img src="http://img.wcw231407.cn/202404041053215.png" alt="image-20240404105340082"></p>
+<h2 id="服务注册到nacos"><a href="#服务注册到nacos" class="headerlink" title="服务注册到nacos"></a><strong>服务注册到nacos</strong></h2><p>1.引入spring-coloud-alilbaba依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-alibaba&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.2.5.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.注释之前在项目上相关的eureka配置</p>
+<p>3.在user-service&amp;order-service添加nacos客户端的依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-discovery --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;</span><br><span class="line">       </span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>4.修改order-service&amp;user-service的配置文件，注释eureka的配置添加nacos配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">    cloud:</span><br><span class="line">        nacos:</span><br><span class="line">            server-addr: localhost:8848</span><br></pre></td></tr></table></figure>
+
+<h2 id="nacos服务的存储模型"><a href="#nacos服务的存储模型" class="headerlink" title="nacos服务的存储模型"></a><strong>nacos服务的存储模型</strong></h2><p><img src="http://img.wcw231407.cn/202404041055479.png" alt="image-20240404105546293"></p>
+<p>服务集群调用的问题</p>
+<ul>
+<li>尽可能调用本地集群，跨集群调用延迟过高</li>
+<li>本地集群不能访问时，再去访问其他集群</li>
+</ul>
+<p><img src="http://img.wcw231407.cn/202404041056445.png" alt="image-20240404105611313"></p>
+<h2 id="服务集群配置"><a href="#服务集群配置" class="headerlink" title="服务集群配置"></a><strong>服务集群配置</strong></h2><p>增加服务集群配置，name随便命名：</p>
+<p><img src="http://img.wcw231407.cn/202404041056346.png" alt="image-20240404105641265"></p>
+<p>在nacos控制台就会看到两个集群的地方</p>
+<p><img src="http://img.wcw231407.cn/202404041057345.png" alt="image-20240404105706187"></p>
+<h2 id="根据集群负载均衡"><a href="#根据集群负载均衡" class="headerlink" title="根据集群负载均衡"></a><strong>根据集群负载均衡</strong></h2><p><strong>1.修改order-service中的application.yml,设置集群为HZ</strong></p>
+<p>服务集群属性（来保证服务器优先访问的是本地集群）</p>
+<p><img src="http://img.wcw231407.cn/202404041057442.png" alt="image-20240404105732321"></p>
+<p><strong>2.然后order-service中设置负载均衡的IRule的NacosRule，这个规则优先会寻找与自己同集群的服务：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">userservice:</span><br><span class="line">    ribbon:</span><br><span class="line">        NFLoadBalancerRuleClassName: com.alibaba.cloud.nacos.ribbon.NacosRule</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.注意将user-service的权重设置为1</strong></p>
+<blockquote>
+<p>NacosRule负载均衡策略：</p>
+<p>​	1.优先选择同集群服务实例列表</p>
+<p>​	2.本地集群找不到提供者，才去其它集群寻找，并且会报警告</p>
+<p>​	3.确定了可用实例列表后，在采用随机负载均衡挑选实例</p>
+</blockquote>
+<h2 id="根据权重负载均衡"><a href="#根据权重负载均衡" class="headerlink" title="根据权重负载均衡"></a><strong>根据权重负载均衡</strong></h2><p>1.在Nacos控制台可以设置实例的权重，首先选中实例后面的编辑按钮</p>
+<p><img src="http://img.wcw231407.cn/202404041100364.png" alt="image-20240404110019247"></p>
+<p>2.将权重设置为0.1，测试可以发现8080被访问到的频率大大降低</p>
+<blockquote>
+<p>实例的权重控制</p>
+<p>​	1.Nacos控制台可以设置实例的权重值，0-1之间</p>
+<p>​	2.同集群内的多个实例，权重越高被访问的频率越高</p>
+<p>​	3.权重设置为0则完全不会被访问</p>
+</blockquote>
+<h2 id="环境隔离-namespace"><a href="#环境隔离-namespace" class="headerlink" title="环境隔离 - namespace"></a><strong>环境隔离 - namespace</strong></h2><p>Nacos中服务存储和数据存储的最外层都是一个名为namespace的东西，用来做最外层隔离</p>
+<p><img src="http://img.wcw231407.cn/202404041102839.png" alt="image-20240404110205621"></p>
+<h3 id="具体操作"><a href="#具体操作" class="headerlink" title="具体操作"></a><strong>具体操作</strong></h3><p><img src="http://img.wcw231407.cn/202404041102365.png" alt="image-20240404110242251"></p>
+<p><img src="http://img.wcw231407.cn/202404041103287.png" alt="image-20240404110302178"></p>
+<p><img src="http://img.wcw231407.cn/202404041103402.png" alt="image-20240404110322274"></p>
+<p><img src="http://img.wcw231407.cn/202404041103421.png" alt="image-20240404110337308"></p>
+<p><img src="http://img.wcw231407.cn/202404041103924.png" alt="image-20240404110351774"></p>
+<blockquote>
+<p><strong>总结</strong>:</p>
+<p>1.Nacos与eureka的共同点</p>
+<ul>
+<li>都支持服务注册和服务拉取</li>
+<li>都支持服务提供者心跳方式做健康检测</li>
+</ul>
+<p>2.Nacos与Eureka的区别：</p>
+<ul>
+<li>Nacos支持服务端主动检测提供者：临时实例采用<strong>心跳模式</strong>，非临时实例采用<strong>主动检测模式</strong></li>
+<li><strong>临时实例</strong>心跳不正常会被踢除，<strong>非临时实例</strong>则不会被剔除</li>
+<li>Nacos支持服务列表变更的<strong>消息推送模式</strong>，服务列表更新更及时</li>
+<li>Nacos集群默认采用AP方式，当集群中存在非临时实例时，采用<strong>CP模式</strong>；Eureka采用<strong>AP方式</strong></li>
+</ul>
+<p>3.Nacos环境隔离</p>
+<p>①每个namespace都有唯一id</p>
+<p>②服务设置namespace时要写id而不是名称</p>
+<p>③不同namespace下的服务互相不可见</p>
+<p>nacos注意细节：</p>
+<p><img src="http://img.wcw231407.cn/202404041106377.png" alt="image-20240404110635228"></p>
+</blockquote>
+<h2 id="Nacos的配置管理"><a href="#Nacos的配置管理" class="headerlink" title="Nacos的配置管理"></a><strong>Nacos的配置管理</strong></h2><h3 id="统一配置管理"><a href="#统一配置管理" class="headerlink" title="统一配置管理"></a><strong>统一配置管理</strong></h3><p>1.回顾目前我们所学习的微服务架构</p>
+<p><img src="http://img.wcw231407.cn/202404041108497.png" alt="image-20240404110806375"></p>
+<p>2.配置更改热更新</p>
+<p><img src="http://img.wcw231407.cn/202404041108519.png" alt="image-20240404110833392"></p>
+<p><img src="http://img.wcw231407.cn/202404041109605.png" alt="image-20240404110941472"></p>
+<p>1.在navos添加配置中心：</p>
+<p><img src="http://img.wcw231407.cn/202404041110195.png" alt="image-20240404111004961"></p>
+<p>在弹出的表单中填写信息</p>
+<p><img src="http://img.wcw231407.cn/202404041110112.png" alt="image-20240404111027976"></p>
+<p>配置获取步骤如下：</p>
+<p><img src="http://img.wcw231407.cn/202404041110248.png" alt="image-20240404111057150"></p>
+<p>加入nacos统一配置管理后：</p>
+<p><img src="http://img.wcw231407.cn/202404041112312.png" alt="image-20240404111211187"></p>
+<p>步骤：</p>
+<p>1.引入Nacos的配置管理客户端依赖：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-config&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.1.2.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>2.在userservice中的resource目录下添加一个bootstrap.yml文件，这个文件是引导文件，优先级高于application.yml:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  application:</span><br><span class="line">    name: userservice #服务名称</span><br><span class="line">  profiles:</span><br><span class="line">    active: dev #环境</span><br><span class="line">  cloud:</span><br><span class="line">    nacos:</span><br><span class="line">      server-addr: localhost:8848 #nacos地址</span><br><span class="line">      config:</span><br><span class="line">        file-extension: yaml #文件后缀</span><br></pre></td></tr></table></figure>
+
+<p>3.在controller中添加以下代码，测试nacos统一配置有没有生效</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Value(&quot;$&#123;pattern.dateformat&#125;&quot;)</span><br><span class="line">private String dateformat;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 测试时间格式是否已经注入</span><br><span class="line"> * @return</span><br><span class="line"> */</span><br><span class="line">@GetMapping(&quot;now&quot;)</span><br><span class="line">public String now()&#123;</span><br><span class="line">    return LocalDateTime.now().format(DateTimeFormatter.ofPattern(dateformat));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>总结：</p>
+<p>将配置交给Nacos管理步骤：</p>
+<p>1.在nacos中添加配置文件</p>
+<p>2.在微服务中引入nacos的config依赖</p>
+<p>3.在微服务中添加bootstrap.yml，配置nacos地址、当前环境，服务名称和文件后缀名。这些决定了程序启动时去nacos读取哪个文件。</p>
+</blockquote>
+<h3 id="多环境配置共享"><a href="#多环境配置共享" class="headerlink" title="多环境配置共享"></a><strong>多环境配置共享</strong></h3><p>微服务启动时会从nacos读取多个配置文件：</p>
+<ul>
+<li>[spring.application.name]-[spring.profiles.active].yaml,例如：userservice-dev.yaml</li>
+<li>[spring.application.name].yaml,例如：userservice.yaml</li>
+</ul>
+<p>无论profile如何变化。[spring.application.name].yaml这个文件一定会加载，因此多环境共享配置可以写入这个文件</p>
+<p>1.在nacos中添加环境配置userservice.yaml</p>
+<p><img src="http://img.wcw231407.cn/202404041123817.png" alt="image-20240404112357670"></p>
+<p><img src="http://img.wcw231407.cn/202404041124544.png" alt="image-20240404112421381"></p>
+<p>2.注入属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Data</span><br><span class="line">@Component</span><br><span class="line">@ConfigurationProperties(prefix = &quot;pattern&quot;)</span><br><span class="line">public class PatternProperties &#123;</span><br><span class="line">    private String dateformat;</span><br><span class="line">    private String envShareValue;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.在controller中添加下面的方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(&quot;pros&quot;)</span><br><span class="line">public PatternProperties properties()&#123;</span><br><span class="line">    return properties;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>开发环境（dev）</p>
+<p><img src="http://img.wcw231407.cn/202404041125224.png" alt="image-20240404112532135"></p>
+<p><strong>测试在不同环境下的优先级</strong></p>
+<p>1.在本地属性添加以下属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pattern:</span><br><span class="line">  name: 本地环境local</span><br></pre></td></tr></table></figure>
+
+<p>2.在userservice-dev.yaml上写改为以上配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pattern:</span><br><span class="line">    dateformat: yyyy年MM月dd HH:mm:ss</span><br><span class="line">    name: 环境配置dev</span><br></pre></td></tr></table></figure>
+
+<p>3.在userservice.yaml上改写为以上配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pattern:</span><br><span class="line">    envShareValue: 环境共享属性值</span><br><span class="line">    name: 环境共享default</span><br></pre></td></tr></table></figure>
+
+<p>访问结果如下：</p>
+<p><img src="http://img.wcw231407.cn/202404041127444.png" alt="image-20240404112713343"></p>
+<p><img src="http://img.wcw231407.cn/202404041127461.png" alt="image-20240404112741334"></p>
+<blockquote>
+<p>微服务会从nacos读取的配置文件：</p>
+<ul>
+<li>[服务名]-[spring.profile.active].yaml,环境变量</li>
+<li>[服务名].yaml,默认配置，多环境共享</li>
+</ul>
+<p>优先级：</p>
+<p>[服务名]-[环境].yaml&gt;[服务名].yaml&gt;本地配置</p>
+</blockquote>
+<h3 id="Nacos集群搭建"><a href="#Nacos集群搭建" class="headerlink" title="Nacos集群搭建"></a><strong>Nacos集群搭建</strong></h3><p>Nacos生产环境下一定要部署为集群状态</p>
+<p>集群结构图：</p>
+<p><img src="http://img.wcw231407.cn/202404041128823.png" alt="image-20240404112851675"></p>
+<h2 id="搭建集群的步骤："><a href="#搭建集群的步骤：" class="headerlink" title="搭建集群的步骤："></a><strong>搭建集群的步骤：</strong></h2><p>1.建立数据库表</p>
+<p>2.安装nacos</p>
+<p>3.写nacos的配置</p>
+<p>4.启动nacos集群</p>
+<p>5.ngnix的反向代理</p>
+<h3 id="初始化数据库"><a href="#初始化数据库" class="headerlink" title="初始化数据库"></a><strong>初始化数据库</strong></h3><p>Nacos默认数据存储在内嵌数据库Derby中，不属于生产可用的数据库。</p>
+<p>官方推荐的最佳实践是使用带有主从的高可用数据库集群，主从模式的高可用数据库可以参考<strong>传智教育</strong>的后续高手课程。</p>
+<p>这里我们以单点的数据库为例来讲解。</p>
+<p>首先新建一个数据库，命名为nacos，而后导入下面的SQL：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE `config_info` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;id&#x27;,</span><br><span class="line">  `data_id` varchar(255) NOT NULL COMMENT &#x27;data_id&#x27;,</span><br><span class="line">  `group_id` varchar(255) DEFAULT NULL,</span><br><span class="line">  `content` longtext NOT NULL COMMENT &#x27;content&#x27;,</span><br><span class="line">  `md5` varchar(32) DEFAULT NULL COMMENT &#x27;md5&#x27;,</span><br><span class="line">  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;创建时间&#x27;,</span><br><span class="line">  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  `src_user` text COMMENT &#x27;source user&#x27;,</span><br><span class="line">  `src_ip` varchar(50) DEFAULT NULL COMMENT &#x27;source ip&#x27;,</span><br><span class="line">  `app_name` varchar(128) DEFAULT NULL,</span><br><span class="line">  `tenant_id` varchar(128) DEFAULT &#x27;&#x27; COMMENT &#x27;租户字段&#x27;,</span><br><span class="line">  `c_desc` varchar(256) DEFAULT NULL,</span><br><span class="line">  `c_use` varchar(64) DEFAULT NULL,</span><br><span class="line">  `effect` varchar(64) DEFAULT NULL,</span><br><span class="line">  `type` varchar(64) DEFAULT NULL,</span><br><span class="line">  `c_schema` text,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_configinfo_datagrouptenant` (`data_id`,`group_id`,`tenant_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;config_info&#x27;;</span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = config_info_aggr   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `config_info_aggr` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;id&#x27;,</span><br><span class="line">  `data_id` varchar(255) NOT NULL COMMENT &#x27;data_id&#x27;,</span><br><span class="line">  `group_id` varchar(255) NOT NULL COMMENT &#x27;group_id&#x27;,</span><br><span class="line">  `datum_id` varchar(255) NOT NULL COMMENT &#x27;datum_id&#x27;,</span><br><span class="line">  `content` longtext NOT NULL COMMENT &#x27;内容&#x27;,</span><br><span class="line">  `gmt_modified` datetime NOT NULL COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  `app_name` varchar(128) DEFAULT NULL,</span><br><span class="line">  `tenant_id` varchar(128) DEFAULT &#x27;&#x27; COMMENT &#x27;租户字段&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_configinfoaggr_datagrouptenantdatum` (`data_id`,`group_id`,`tenant_id`,`datum_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;增加租户字段&#x27;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = config_info_beta   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `config_info_beta` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;id&#x27;,</span><br><span class="line">  `data_id` varchar(255) NOT NULL COMMENT &#x27;data_id&#x27;,</span><br><span class="line">  `group_id` varchar(128) NOT NULL COMMENT &#x27;group_id&#x27;,</span><br><span class="line">  `app_name` varchar(128) DEFAULT NULL COMMENT &#x27;app_name&#x27;,</span><br><span class="line">  `content` longtext NOT NULL COMMENT &#x27;content&#x27;,</span><br><span class="line">  `beta_ips` varchar(1024) DEFAULT NULL COMMENT &#x27;betaIps&#x27;,</span><br><span class="line">  `md5` varchar(32) DEFAULT NULL COMMENT &#x27;md5&#x27;,</span><br><span class="line">  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;创建时间&#x27;,</span><br><span class="line">  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  `src_user` text COMMENT &#x27;source user&#x27;,</span><br><span class="line">  `src_ip` varchar(50) DEFAULT NULL COMMENT &#x27;source ip&#x27;,</span><br><span class="line">  `tenant_id` varchar(128) DEFAULT &#x27;&#x27; COMMENT &#x27;租户字段&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_configinfobeta_datagrouptenant` (`data_id`,`group_id`,`tenant_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;config_info_beta&#x27;;</span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = config_info_tag   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `config_info_tag` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;id&#x27;,</span><br><span class="line">  `data_id` varchar(255) NOT NULL COMMENT &#x27;data_id&#x27;,</span><br><span class="line">  `group_id` varchar(128) NOT NULL COMMENT &#x27;group_id&#x27;,</span><br><span class="line">  `tenant_id` varchar(128) DEFAULT &#x27;&#x27; COMMENT &#x27;tenant_id&#x27;,</span><br><span class="line">  `tag_id` varchar(128) NOT NULL COMMENT &#x27;tag_id&#x27;,</span><br><span class="line">  `app_name` varchar(128) DEFAULT NULL COMMENT &#x27;app_name&#x27;,</span><br><span class="line">  `content` longtext NOT NULL COMMENT &#x27;content&#x27;,</span><br><span class="line">  `md5` varchar(32) DEFAULT NULL COMMENT &#x27;md5&#x27;,</span><br><span class="line">  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;创建时间&#x27;,</span><br><span class="line">  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  `src_user` text COMMENT &#x27;source user&#x27;,</span><br><span class="line">  `src_ip` varchar(50) DEFAULT NULL COMMENT &#x27;source ip&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_configinfotag_datagrouptenanttag` (`data_id`,`group_id`,`tenant_id`,`tag_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;config_info_tag&#x27;;</span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = config_tags_relation   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `config_tags_relation` (</span><br><span class="line">  `id` bigint(20) NOT NULL COMMENT &#x27;id&#x27;,</span><br><span class="line">  `tag_name` varchar(128) NOT NULL COMMENT &#x27;tag_name&#x27;,</span><br><span class="line">  `tag_type` varchar(64) DEFAULT NULL COMMENT &#x27;tag_type&#x27;,</span><br><span class="line">  `data_id` varchar(255) NOT NULL COMMENT &#x27;data_id&#x27;,</span><br><span class="line">  `group_id` varchar(128) NOT NULL COMMENT &#x27;group_id&#x27;,</span><br><span class="line">  `tenant_id` varchar(128) DEFAULT &#x27;&#x27; COMMENT &#x27;tenant_id&#x27;,</span><br><span class="line">  `nid` bigint(20) NOT NULL AUTO_INCREMENT,</span><br><span class="line">  PRIMARY KEY (`nid`),</span><br><span class="line">  UNIQUE KEY `uk_configtagrelation_configidtag` (`id`,`tag_name`,`tag_type`),</span><br><span class="line">  KEY `idx_tenant_id` (`tenant_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;config_tag_relation&#x27;;</span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = group_capacity   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `group_capacity` (</span><br><span class="line">  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT &#x27;主键ID&#x27;,</span><br><span class="line">  `group_id` varchar(128) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;Group ID，空字符表示整个集群&#x27;,</span><br><span class="line">  `quota` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;配额，0表示使用默认值&#x27;,</span><br><span class="line">  `usage` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;使用量&#x27;,</span><br><span class="line">  `max_size` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;单个配置大小上限，单位为字节，0表示使用默认值&#x27;,</span><br><span class="line">  `max_aggr_count` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;聚合子配置最大个数，，0表示使用默认值&#x27;,</span><br><span class="line">  `max_aggr_size` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;单个聚合数据的子配置大小上限，单位为字节，0表示使用默认值&#x27;,</span><br><span class="line">  `max_history_count` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;最大变更历史数量&#x27;,</span><br><span class="line">  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;创建时间&#x27;,</span><br><span class="line">  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_group_id` (`group_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;集群、各Group容量信息表&#x27;;</span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = his_config_info   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `his_config_info` (</span><br><span class="line">  `id` bigint(64) unsigned NOT NULL,</span><br><span class="line">  `nid` bigint(20) unsigned NOT NULL AUTO_INCREMENT,</span><br><span class="line">  `data_id` varchar(255) NOT NULL,</span><br><span class="line">  `group_id` varchar(128) NOT NULL,</span><br><span class="line">  `app_name` varchar(128) DEFAULT NULL COMMENT &#x27;app_name&#x27;,</span><br><span class="line">  `content` longtext NOT NULL,</span><br><span class="line">  `md5` varchar(32) DEFAULT NULL,</span><br><span class="line">  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,</span><br><span class="line">  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,</span><br><span class="line">  `src_user` text,</span><br><span class="line">  `src_ip` varchar(50) DEFAULT NULL,</span><br><span class="line">  `op_type` char(10) DEFAULT NULL,</span><br><span class="line">  `tenant_id` varchar(128) DEFAULT &#x27;&#x27; COMMENT &#x27;租户字段&#x27;,</span><br><span class="line">  PRIMARY KEY (`nid`),</span><br><span class="line">  KEY `idx_gmt_create` (`gmt_create`),</span><br><span class="line">  KEY `idx_gmt_modified` (`gmt_modified`),</span><br><span class="line">  KEY `idx_did` (`data_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;多租户改造&#x27;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">/******************************************/</span><br><span class="line">/*   数据库全名 = nacos_config   */</span><br><span class="line">/*   表名称 = tenant_capacity   */</span><br><span class="line">/******************************************/</span><br><span class="line">CREATE TABLE `tenant_capacity` (</span><br><span class="line">  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT &#x27;主键ID&#x27;,</span><br><span class="line">  `tenant_id` varchar(128) NOT NULL DEFAULT &#x27;&#x27; COMMENT &#x27;Tenant ID&#x27;,</span><br><span class="line">  `quota` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;配额，0表示使用默认值&#x27;,</span><br><span class="line">  `usage` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;使用量&#x27;,</span><br><span class="line">  `max_size` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;单个配置大小上限，单位为字节，0表示使用默认值&#x27;,</span><br><span class="line">  `max_aggr_count` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;聚合子配置最大个数&#x27;,</span><br><span class="line">  `max_aggr_size` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;单个聚合数据的子配置大小上限，单位为字节，0表示使用默认值&#x27;,</span><br><span class="line">  `max_history_count` int(10) unsigned NOT NULL DEFAULT &#x27;0&#x27; COMMENT &#x27;最大变更历史数量&#x27;,</span><br><span class="line">  `gmt_create` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;创建时间&#x27;,</span><br><span class="line">  `gmt_modified` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_tenant_id` (`tenant_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;租户容量信息表&#x27;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">CREATE TABLE `tenant_info` (</span><br><span class="line">  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT &#x27;id&#x27;,</span><br><span class="line">  `kp` varchar(128) NOT NULL COMMENT &#x27;kp&#x27;,</span><br><span class="line">  `tenant_id` varchar(128) default &#x27;&#x27; COMMENT &#x27;tenant_id&#x27;,</span><br><span class="line">  `tenant_name` varchar(128) default &#x27;&#x27; COMMENT &#x27;tenant_name&#x27;,</span><br><span class="line">  `tenant_desc` varchar(256) DEFAULT NULL COMMENT &#x27;tenant_desc&#x27;,</span><br><span class="line">  `create_source` varchar(32) DEFAULT NULL COMMENT &#x27;create_source&#x27;,</span><br><span class="line">  `gmt_create` bigint(20) NOT NULL COMMENT &#x27;创建时间&#x27;,</span><br><span class="line">  `gmt_modified` bigint(20) NOT NULL COMMENT &#x27;修改时间&#x27;,</span><br><span class="line">  PRIMARY KEY (`id`),</span><br><span class="line">  UNIQUE KEY `uk_tenant_info_kptenantid` (`kp`,`tenant_id`),</span><br><span class="line">  KEY `idx_tenant_id` (`tenant_id`)</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin COMMENT=&#x27;tenant_info&#x27;;</span><br><span class="line"></span><br><span class="line">CREATE TABLE `users` (</span><br><span class="line">    `username` varchar(50) NOT NULL PRIMARY KEY,</span><br><span class="line">    `password` varchar(500) NOT NULL,</span><br><span class="line">    `enabled` boolean NOT NULL</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">CREATE TABLE `roles` (</span><br><span class="line">    `username` varchar(50) NOT NULL,</span><br><span class="line">    `role` varchar(50) NOT NULL,</span><br><span class="line">    UNIQUE INDEX `idx_user_role` (`username` ASC, `role` ASC) USING BTREE</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">CREATE TABLE `permissions` (</span><br><span class="line">    `role` varchar(50) NOT NULL,</span><br><span class="line">    `resource` varchar(255) NOT NULL,</span><br><span class="line">    `action` varchar(8) NOT NULL,</span><br><span class="line">    UNIQUE INDEX `uk_role_permission` (`role`,`resource`,`action`) USING BTREE</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO users (username, password, enabled) VALUES (&#x27;nacos&#x27;, &#x27;$2a$10$EuWPZHzz32dJN7jexM34MOeYirDdFAZm2kuWj7VEOJhhZkDrxfvUu&#x27;, TRUE);</span><br><span class="line"></span><br><span class="line">INSERT INTO roles (username, role) VALUES (&#x27;nacos&#x27;, &#x27;ROLE_ADMIN&#x27;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="改nacos配置"><a href="#改nacos配置" class="headerlink" title="改nacos配置"></a><strong>改nacos配置</strong></h3><p>进入nacos的conf目录，修改配置文件cluster.conf.example，重命名为cluster.conf：</p>
+<p><img src="http://img.wcw231407.cn/202404041131214.png" alt="image-20240404113107059"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:8844</span><br><span class="line">127.0.0.1:8846</span><br><span class="line">127.0.0.1:8849</span><br></pre></td></tr></table></figure>
+
+<p>建立三个文件夹nacos、nacos01、nacos02</p>
+<p>nacos修改如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.port=8844</span><br></pre></td></tr></table></figure>
+
+<p>nacos02修改如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.port=8846</span><br></pre></td></tr></table></figure>
+
+<p>nacos03修改如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">server.port=8849</span><br></pre></td></tr></table></figure>
+
+<p><strong>3.启动集群</strong></p>
+<p><img src="http://img.wcw231407.cn/202404041134164.png" alt="image-20240404113414037"></p>
+<p>然后修改application.properties文件，添加数据库配置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spring.datasource.platform=mysql</span><br><span class="line">db.num=1</span><br><span class="line">db.url.0=jdbc:mysql://127.0.0.1:3306/nacos?characterEncoding=utf8&amp;connectTimeout=1000&amp;socketTimeout=3000&amp;autoReconnect=true&amp;useUnicode=true&amp;useSSL=false&amp;serverTimezone=UTC</span><br><span class="line">db.user.0=root</span><br><span class="line">db.password.0=wcw231407</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意一定不要出现连续的端口号否者会出现端口占用问题</p>
+</blockquote>
+<h3 id="nginx反向代理"><a href="#nginx反向代理" class="headerlink" title="nginx反向代理"></a><strong>nginx反向代理</strong></h3><p>找到课前资料提供的nginx安装包：</p>
+<p>链接：<a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1zZaC2BBClAVEkBtg8pIBpw?pwd=ksw1">https://pan.baidu.com/s/1zZaC2BBClAVEkBtg8pIBpw?pwd=ksw1</a><br>提取码：ksw1</p>
+<p>解压到任意非中文目录下：</p>
+<p><img src="http://img.wcw231407.cn/202404041142700.png" alt="image-20240404114236557"></p>
+<p>修改conf&#x2F;nginx.conf文件，配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">upstream nacos-cluster &#123;</span><br><span class="line">    server 127.0.0.1:8845;</span><br><span class="line">    server 127.0.0.1:8846;</span><br><span class="line">    server 127.0.0.1:8847;</span><br><span class="line">&#125;</span><br><span class="line">server &#123;</span><br><span class="line">    listen       80;</span><br><span class="line">    server_name  localhost;</span><br><span class="line"></span><br><span class="line">    location /nacos &#123;</span><br><span class="line">        proxy_pass http://nacos-cluster;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>而后在浏览器访问：<a target="_blank" rel="noopener" href="http://localhost/nacos%E5%8D%B3%E5%8F%AF%E3%80%82">http://localhost/nacos即可。</a></p>
+<p>代码中application.yml文件配置如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  cloud:</span><br><span class="line">    nacos:</span><br><span class="line">      server-addr: localhost:80 # Nacos地址</span><br></pre></td></tr></table></figure>
+
+<h3 id="优化"><a href="#优化" class="headerlink" title="优化"></a><strong>优化</strong></h3><p>1.实际部署时，需要给做反向代理的nginx服务器设置一个域名，这样后续如果有服务器迁移nacos的客户端也无需更改配置.</p>
+<p>2.Nacos的各个节点应该部署到多个不同服务器，做好容灾和隔离 </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn">wcw</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn/2024/04/04/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94Nacos/">https://user.wcw231407.cn/2024/04/04/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E5%9B%9B%EF%BC%89%E2%80%94%E2%80%94Nacos/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://user.wcw231407.cn" target="_blank">Fancydog‘s blogs</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/">注册中心</a></div><div class="post_share"><div class="social-share" data-image="https://img.wcw231407.cn/202404041147113.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="avatar"/></div><div class="author-info__name">wcw</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcw-001"><i></i><span>🛴前往小家...</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wcw-001" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:2314075528@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_59400558?type=blog" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=3227698318&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Nacos"><span class="toc-number">1.</span> <span class="toc-text">Nacos</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#nacos%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.</span> <span class="toc-text">nacos的安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%88%B0nacos"><span class="toc-number">1.2.</span> <span class="toc-text">服务注册到nacos</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#nacos%E6%9C%8D%E5%8A%A1%E7%9A%84%E5%AD%98%E5%82%A8%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.3.</span> <span class="toc-text">nacos服务的存储模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE"><span class="toc-number">1.4.</span> <span class="toc-text">服务集群配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E9%9B%86%E7%BE%A4%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.5.</span> <span class="toc-text">根据集群负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B9%E6%8D%AE%E6%9D%83%E9%87%8D%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1"><span class="toc-number">1.6.</span> <span class="toc-text">根据权重负载均衡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB-namespace"><span class="toc-number">1.7.</span> <span class="toc-text">环境隔离 - namespace</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="toc-number">1.7.1.</span> <span class="toc-text">具体操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nacos%E7%9A%84%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="toc-number">1.8.</span> <span class="toc-text">Nacos的配置管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%9F%E4%B8%80%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86"><span class="toc-number">1.8.1.</span> <span class="toc-text">统一配置管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE%E5%85%B1%E4%BA%AB"><span class="toc-number">1.8.2.</span> <span class="toc-text">多环境配置共享</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nacos%E9%9B%86%E7%BE%A4%E6%90%AD%E5%BB%BA"><span class="toc-number">1.8.3.</span> <span class="toc-text">Nacos集群搭建</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E9%9B%86%E7%BE%A4%E7%9A%84%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="toc-number">1.9.</span> <span class="toc-text">搭建集群的步骤：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9D%E5%A7%8B%E5%8C%96%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-number">1.9.1.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%B9nacos%E9%85%8D%E7%BD%AE"><span class="toc-number">1.9.2.</span> <span class="toc-text">改nacos配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nginx%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86"><span class="toc-number">1.9.3.</span> <span class="toc-text">nginx反向代理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96"><span class="toc-number">1.9.4.</span> <span class="toc-text">优化</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://img.wcw231407.cn/202404041147113.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By wcw</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="false"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 190px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 160px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<div id="workboard"></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":"ture"},"rect":"opacity:0.7","dialog":{"enable":true,"hitokoto":true,"text":["一切的一切只是开始"]},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><!--meta(name="referrer" content="no-referrer")--><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JDBC（中） | Fancydog‘s blogs</title><!--meta(name="author" content=pageAuthor)--><meta name="copyright" content="wcw"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="自定义JDBCUtil工具前面Jdbc的基本使用使用已经讲得差不多了，但如果我们经常要创建连接，关闭连接的话，那么每次都要写重复的代码，显然这样非常的麻烦，为了避免这种情况，编写了一个JdbcUtil工具类，如下。 1.db.properties文件用于放置驱动名称，连接数据库地址，数据库账号和密码。(db.properties要放在src或者默认会加载的目录下，不要放在包下面了) 12345#M">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JDBC（中）">
+<meta property="og:url" content="https://user.wcw231407.cn/2024/03/27/JDBC%EF%BC%88%E4%B8%AD%EF%BC%89/index.html">
+<meta property="og:site_name" content="Fancydog‘s blogs">
+<meta property="og:description" content="自定义JDBCUtil工具前面Jdbc的基本使用使用已经讲得差不多了，但如果我们经常要创建连接，关闭连接的话，那么每次都要写重复的代码，显然这样非常的麻烦，为了避免这种情况，编写了一个JdbcUtil工具类，如下。 1.db.properties文件用于放置驱动名称，连接数据库地址，数据库账号和密码。(db.properties要放在src或者默认会加载的目录下，不要放在包下面了) 12345#M">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.wcw231407.cn/202403271814951.jpg">
+<meta property="article:published_time" content="2024-03-27T10:10:39.000Z">
+<meta property="article:modified_time" content="2024-03-27T10:15:19.936Z">
+<meta property="article:author" content="wcw">
+<meta property="article:tag" content="java">
+<meta property="article:tag" content="jdbc">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.wcw231407.cn/202403271814951.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://user.wcw231407.cn/2024/03/27/JDBC%EF%BC%88%E4%B8%AD%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: wcw","link":"链接: ","source":"来源: Fancydog‘s blogs","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JDBC（中）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-03-27 18:15:19'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.0.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img.wcw231407.cn/202403271814951.jpg')"><nav id="nav"><span id="blog-info"><a href="/" title="Fancydog‘s blogs"><span class="site-name">Fancydog‘s blogs</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JDBC（中）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-03-27T10:10:39.000Z" title="发表于 2024-03-27 18:10:39">2024-03-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-03-27T10:15:19.936Z" title="更新于 2024-03-27 18:15:19">2024-03-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JDBC/">JDBC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JDBC（中）"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="自定义JDBCUtil工具"><a href="#自定义JDBCUtil工具" class="headerlink" title="自定义JDBCUtil工具"></a>自定义JDBCUtil工具</h1><p>前面Jdbc的基本使用使用已经讲得差不多了，但如果我们经常要创建连接，关闭连接的话，那么每次都要写重复的代码，显然这样非常的麻烦，为了避免这种情况，编写了一个JdbcUtil工具类，如下。</p>
+<h2 id="1-db-properties文件"><a href="#1-db-properties文件" class="headerlink" title="1.db.properties文件"></a>1.db.properties文件</h2><p>用于放置驱动名称，连接数据库地址，数据库账号和密码。(db.properties要放在src或者默认会加载的目录下，不要放在包下面了)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#MySQL连接配置</span><br><span class="line">mysqlDriver=com.mysql.jdbc.Driver</span><br><span class="line">mysqlURL=jdbc:mysql://localhost:3306/jdbcstudy?characterEncoding=utf8&amp;useSSL=false</span><br><span class="line">mysqlUser=root</span><br><span class="line">mysqlPwd=123456</span><br></pre></td></tr></table></figure>
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<h2 id="2-创建JdbcUtil工具类"><a href="#2-创建JdbcUtil工具类" class="headerlink" title="2.创建JdbcUtil工具类"></a>2.创建JdbcUtil工具类</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">import javax.management.RuntimeMBeanException;</span><br><span class="line">import java.io.FileInputStream;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">import java.sql.*;</span><br><span class="line">import java.util.Properties;</span><br><span class="line"></span><br><span class="line">public class JdbcUtil &#123;</span><br><span class="line">    private static String url;</span><br><span class="line">    private static String user;</span><br><span class="line">    private static String password;</span><br><span class="line">    private static String driver;</span><br><span class="line">    static &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            Properties properties = new Properties();</span><br><span class="line">            properties.load(new FileInputStream(&quot;src\\DateBase_select\\db.properties&quot;));</span><br><span class="line">            url = properties.getProperty(&quot;url&quot;);</span><br><span class="line">            user = properties.getProperty(&quot;user&quot;);</span><br><span class="line">            password = properties.getProperty(&quot;password&quot;);</span><br><span class="line">            driver = properties.getProperty(&quot;driver&quot;);</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            throw new RuntimeException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Connection getConnection()&#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            return DriverManager.getConnection(url,user,password);</span><br><span class="line">        &#125; catch (SQLException throwables) &#123;</span><br><span class="line">            throw new RuntimeException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void close(ResultSet resultSet,Statement statement, Connection connection)&#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            resultSet.close();</span><br><span class="line">            statement.close();</span><br><span class="line">            connection.close();</span><br><span class="line">        &#125; catch (SQLException throwables) &#123;</span><br><span class="line">            throw new RuntimeException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    public static void close(Statement statement, Connection connection)&#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            statement.close();</span><br><span class="line">            connection.close();</span><br><span class="line">        &#125; catch (SQLException throwables) &#123;</span><br><span class="line">            throw new RuntimeException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<h2 id="3-JdbcUtil的简单示例："><a href="#3-JdbcUtil的简单示例：" class="headerlink" title="3.JdbcUtil的简单示例："></a>3.JdbcUtil的简单示例：</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) &#123;</span><br><span class="line">        Connection con = null;</span><br><span class="line">        PreparedStatement ps = null;</span><br><span class="line">        ResultSet rs = null;</span><br><span class="line">        //调用JdbcUtil来创建连接</span><br><span class="line">        con = JdbcUtil.getConnection();</span><br><span class="line">        String sql = &quot;select * from t_user&quot;;</span><br><span class="line">        try &#123;</span><br><span class="line">            ps = con.prepareStatement(sql);</span><br><span class="line">            rs = ps.executeQuery();</span><br><span class="line">            while (rs.next()) &#123;</span><br><span class="line">                System.out.print(&quot;编号：&quot; + rs.getInt(1) + &quot;;&quot;);</span><br><span class="line">                System.out.print(&quot;姓名：&quot; + rs.getString(2) + &quot;;&quot;);</span><br><span class="line">                System.out.print(&quot;密码：&quot; + rs.getString(3) + &quot;;&quot;);</span><br><span class="line">                System.out.println();</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            JdbcUtil.close(con, ps, rs);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<blockquote>
+<p>小伙伴会发现一个地方，工具类<code>close()</code>的参数中有一个<code>Statement</code>，这里用<code>Statement</code>而不用<code>PreparedStatement</code>是因为：<code>Statement</code>是<code>PreparedStatement</code>的<code>父接口</code>，<code>Statement</code>可以兼容这两种不同的对象。</p>
+</blockquote>
+<h1 id="JDBC的事务"><a href="#JDBC的事务" class="headerlink" title="JDBC的事务"></a>JDBC的事务</h1><blockquote>
+<h2 id="事务的基本概念"><a href="#事务的基本概念" class="headerlink" title="事务的基本概念"></a>事务的基本概念</h2></blockquote>
+<p>什么是事务呢？</p>
+<p>​    <strong>事务是若干个SQL语句构成的一个操作序列，这些操作表示一个完整的功能，并且需要保证功能的完整性，因此要求在该事务中要求所有的sql要么都执行，要么都不执行，是一个不可分割的整体单位。（简单来说就是由多个小任务的组成的任务）</strong></p>
+<blockquote>
+<h2 id="事务的四个基本要素（ACID）"><a href="#事务的四个基本要素（ACID）" class="headerlink" title="事务的四个基本要素（ACID）"></a>事务的四个基本要素（ACID）</h2></blockquote>
+<ul>
+<li>原子性（Atomicity）：事务是一个不可分割的整体，所有操作要么全做，要么全不做；只要事务中有一个操作出错，回滚到事务开始前的状态的话，那么之前已经执行的所有操作都是无效的，都应该回滚到开始前的状态。</li>
+<li>一致性（Consistency）：事务开始前和结束后，数据库的完整性约束没有被破坏 。比如A向B转账，不可能A扣了钱，B却没收到。</li>
+<li>隔离性（Isolation）：同一时间，只允许一个事务请求同一数据，不同的事务之间彼此没有任何干扰。比如A正在从一张银行卡中取钱，在A取钱结束前，B不能向这张卡转账。</li>
+<li>持久性（Durability）：事务一旦被提交后，事务对数据库的所有更新将被永远保存到数据库，不能回滚。</li>
+</ul>
+<h2 id="事务并发产生的问题"><a href="#事务并发产生的问题" class="headerlink" title="事务并发产生的问题"></a>事务并发产生的问题</h2><ul>
+<li><strong>丢失修改</strong>：当两个或多个事务选择同一行，然后基于最初选定的值更新该行时，会发生丢失更新问题。每个事务都不知道其它事务的存在。最后的更新将重写由其它事务所做的更新，这将导致数据丢失。</li>
+</ul>
+<p><img src="http://img.wcw231407.cn/202403271811755.png" alt="5e759cd12aed423587a17258e107cfb4.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动">编辑</p>
+<p>T1和T2同时修改一条数据，T2的修改覆盖了T1的修改；　如果在T1之后第T2才能进行更改，则可以避免该问</p>
+<ul>
+<li><strong>脏读</strong>：事务A读取了事务B更新并且未提交的数据，然后B回滚操作，那么A读取到的数据是脏数据</li>
+</ul>
+<p><img src="http://img.wcw231407.cn/202403271811945.png" alt="d8e6fb0c2d6a4a2bbaeb3a8935d62191.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动">编辑</p>
+<p>一个编辑人员T1正在更改电子文档。在更改过程中，另一个编辑人员T2复制了该文档（该复本包含到目前为止所做的全部更改）并将其分发给预期的用户。此后，第一个编辑人员T1认为所做的更改是错误的，于是删除了所做的编辑并保存了文档。分发给用户的文档包含不再存在的编辑内容，并且这些编辑内容应认为从未存在过。如果在第一个编辑人员确定最终更改前任何人都不能读取更改的文档，则可以避免该问题。</p>
+<ul>
+<li><strong>不可重复读</strong>：事务 A 多次读取同一数据，事务 B 在事务A多次读取的过程中，对数据作了更新并提交，导致事务A多次读取同一数据时，结果不一致。</li>
+</ul>
+<p><img src="http://img.wcw231407.cn/202403271811011.png" alt="a9f4710156854dff97527e4c014aaff3.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动">编辑</p>
+<p>一个事务在读取某些数据后的某个时间，再次读取以前读过的数据，却发现其读出的数据已经发生了改变！这种现象就叫做“不可重复读”。指事务T2读取数据后，事务T1执行更新操作，使T1和T2无法读取前一次结果。</p>
+<ul>
+<li><strong>幻读</strong>：事务A从一个表中读取了一个字段，然后B在该表中<strong>插入&#x2F;删除</strong>了一些新的行。 之后, 如果 A 再次读取同一个表, 就会多&#x2F;少几行，就好像发生了幻觉一样，这就叫幻读。</li>
+</ul>
+<p><img src="http://img.wcw231407.cn/202403271811861.png" alt="c361723c5e5f45faba5f5d7fd2a10629.png"><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动">编辑</p>
+<p><em>事务t2读取到了事务t1体提交的新增、删除数据，不符合隔离性。</em>幻读和不可重复读都是读取了另一条已经提交的事务（这点就脏读不同），所不同的是不可重复读查询的都是同一个数据项，而幻读针对的是一批数据整体（比如数据的个数）</p>
+<h2 id="事务的隔离级别"><a href="#事务的隔离级别" class="headerlink" title="事务的隔离级别"></a>事务的隔离级别</h2><ul>
+<li>读未提交（read-uncommitted）：允许A事务读取其他事务未提交和已提交的数据</li>
+<li>不可重复读（read-committed）：只允许A事务读取其他事务已提交的数据</li>
+<li>可重复读（repeatable-read）：确保事务可以多次从一个字段中读取相同的值。在这个事务持续期间，禁止其他事务对这个字段进行更新；注意：mysql中使用了MVCC多版本控制技术，在这个级别也可以避免幻读。</li>
+<li>串行化（serializable）：确保事务可以从一个表中读取相同的行，相同的记录。在这个事务持续期间，禁止其他事务对该表执行插入、更新、删除操作（效率非常低，基本不用）</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>事务隔离级别</th>
+<th>脏读</th>
+<th>不可重复读</th>
+<th>幻读</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>读未提交（read-uncommitted）</td>
+<td>是</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>不可重复读（read-committed）</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+</tr>
+<tr>
+<td>可重复读（repeatable-read）</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+</tr>
+<tr>
+<td>串行化（serializable）</td>
+<td>否</td>
+<td>否</td>
+<td>否</td>
+</tr>
+</tbody></table>
+<h2 id="事务中需要使用的API方法"><a href="#事务中需要使用的API方法" class="headerlink" title="事务中需要使用的API方法"></a>事务中需要使用的API方法</h2><ol>
+<li><code>connection.setAutoCommit(false); </code>&#x2F;&#x2F; 取消事务的自动提交</li>
+<li><code>connection.rollback(); </code>&#x2F;&#x2F; 事务回滚<br>参数为空的时候，回滚到事务的开始。如果有参数的时候，返回到回滚点。</li>
+<li><code>connection.commit(); </code>&#x2F;&#x2F; 提交结果给数据库</li>
+</ol>
+<h2 id="事务使用实例"><a href="#事务使用实例" class="headerlink" title="事务使用实例"></a>事务使用实例</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">public class Transaction &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Connection connection = null;</span><br><span class="line">        String sql1 = &quot;update `actor` set salary = salary + 100 where `name` = &#x27;小王&#x27;&quot;;</span><br><span class="line">        String sql2 = &quot;update `actor` set salary = salary - 100 where `name` = &#x27;小李&#x27;&quot;;</span><br><span class="line">        PreparedStatement preparedStatement = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            connection = JdbcUtil.getConnection();</span><br><span class="line">            connection.setAutoCommit(false);</span><br><span class="line">            preparedStatement = connection.prepareStatement(sql1);</span><br><span class="line">            preparedStatement.executeUpdate();</span><br><span class="line">            int i = 1/0;</span><br><span class="line">            preparedStatement = connection.prepareStatement(sql2);</span><br><span class="line">            preparedStatement.executeUpdate();</span><br><span class="line">            connection.commit();</span><br><span class="line">        &#125; catch (SQLException throwables) &#123;</span><br><span class="line">            try &#123;</span><br><span class="line">                connection.rollback();</span><br><span class="line">            &#125; catch (SQLException e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            throwables.printStackTrace();</span><br><span class="line">        &#125;finally &#123;</span><br><span class="line">            JdbcUtil.close(preparedStatement,connection);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==" alt="点击并拖拽以移动"></p>
+<blockquote>
+<p>注意：mysql中默认情况下，一个sql独占一个事务，且自动提交，从以上jdbc学习就可以看得出来</p>
+</blockquote>
+<h1 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h1><blockquote>
+<p>​    idea连接数据库问题：</p>
+<p>​    1.配置时lib未导入连接数据库的架包</p>
+<p>​    2.驱动版本与数据库版本对不上</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn">wcw</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn/2024/03/27/JDBC%EF%BC%88%E4%B8%AD%EF%BC%89/">https://user.wcw231407.cn/2024/03/27/JDBC%EF%BC%88%E4%B8%AD%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://user.wcw231407.cn" target="_blank">Fancydog‘s blogs</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/java/">java</a><a class="post-meta__tags" href="/tags/jdbc/">jdbc</a></div><div class="post_share"><div class="social-share" data-image="https://img.wcw231407.cn/202403271814951.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2024/03/27/JDBC%EF%BC%88%E4%B8%8B%EF%BC%89/" title="JDBC（下）"><img class="cover" src="https://img.wcw231407.cn/202403271820210.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-27</div><div class="title">JDBC（下）</div></div></a></div><div><a href="/2024/03/27/JDBC%EF%BC%88%E4%B8%8A%EF%BC%89/" title="JDBC（上）"><img class="cover" src="https://img.wcw231407.cn/202403281902505.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-27</div><div class="title">JDBC（上）</div></div></a></div><div><a href="/2024/03/26/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1-01/" title="面向对象-01"><img class="cover" src="https://img.wcw231407.cn/202403262127229.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-26</div><div class="title">面向对象-01</div></div></a></div><div><a href="/2024/03/26/%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" title="网络编程"><img class="cover" src="http://img.wcw231407.cn/202403262138858.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-26</div><div class="title">网络编程</div></div></a></div><div><a href="/2024/03/26/java%E4%BD%BF%E7%94%A8%E8%A7%84%E8%8C%83/" title="java使用规范"><img class="cover" src="http://img.wcw231407.cn/202403262143676.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-26</div><div class="title">java使用规范</div></div></a></div><div><a href="/2024/03/26/%E4%BD%9C%E7%94%A8%E5%9F%9F%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" title="作用域基本使用"><img class="cover" src="http://img.wcw231407.cn/202403262140933.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-03-26</div><div class="title">作用域基本使用</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="avatar"/></div><div class="author-info__name">wcw</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcw-001"><i></i><span>🛴前往小家...</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wcw-001" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:2314075528@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_59400558?type=blog" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=3227698318&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89JDBCUtil%E5%B7%A5%E5%85%B7"><span class="toc-number">1.</span> <span class="toc-text">自定义JDBCUtil工具</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-db-properties%E6%96%87%E4%BB%B6"><span class="toc-number">1.1.</span> <span class="toc-text">1.db.properties文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%88%9B%E5%BB%BAJdbcUtil%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text">2.创建JdbcUtil工具类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-JdbcUtil%E7%9A%84%E7%AE%80%E5%8D%95%E7%A4%BA%E4%BE%8B%EF%BC%9A"><span class="toc-number">1.3.</span> <span class="toc-text">3.JdbcUtil的简单示例：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#JDBC%E7%9A%84%E4%BA%8B%E5%8A%A1"><span class="toc-number">2.</span> <span class="toc-text">JDBC的事务</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">2.1.</span> <span class="toc-text">事务的基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E8%A6%81%E7%B4%A0%EF%BC%88ACID%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">事务的四个基本要素（ACID）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E5%B9%B6%E5%8F%91%E4%BA%A7%E7%94%9F%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.3.</span> <span class="toc-text">事务并发产生的问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E7%9A%84%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-number">2.4.</span> <span class="toc-text">事务的隔离级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E4%B8%AD%E9%9C%80%E8%A6%81%E4%BD%BF%E7%94%A8%E7%9A%84API%E6%96%B9%E6%B3%95"><span class="toc-number">2.5.</span> <span class="toc-text">事务中需要使用的API方法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E4%BD%BF%E7%94%A8%E5%AE%9E%E4%BE%8B"><span class="toc-number">2.6.</span> <span class="toc-text">事务使用实例</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%97%AE%E9%A2%98"><span class="toc-number">3.</span> <span class="toc-text">问题</span></a></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://img.wcw231407.cn/202403271814951.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By wcw</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="false"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 190px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 160px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<div id="workboard"></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":"ture"},"rect":"opacity:0.7","dialog":{"enable":true,"hitokoto":true,"text":["一切的一切只是开始"]},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><!--meta(name="referrer" content="no-referrer")--><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringCloud实用篇（五）——RabbitMQ | Fancydog‘s blogs</title><!--meta(name="author" content=pageAuthor)--><meta name="copyright" content="wcw"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="服务异步通讯MQ（消息队列）同步通讯和异步通讯学习MQ之前，先学习同步通讯和异步通讯 同步通讯 同步通讯指的是通讯双方需要在时间上保持一致，也就是一个操作必须等待另一个操作完成后才能执行下一个操作。 比如一个请求需要等待服务器返回结果之后才能继续处理下一个请求。 同步通讯方式的特点：  简单明了 适用于处理量不大、并发量不高的场景  缺点：  阻塞等待：在同步通讯过程中，请求方需要等待响应方返回数">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringCloud实用篇（五）——RabbitMQ">
+<meta property="og:url" content="https://user.wcw231407.cn/2024/04/15/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94RabbitMQ/index.html">
+<meta property="og:site_name" content="Fancydog‘s blogs">
+<meta property="og:description" content="服务异步通讯MQ（消息队列）同步通讯和异步通讯学习MQ之前，先学习同步通讯和异步通讯 同步通讯 同步通讯指的是通讯双方需要在时间上保持一致，也就是一个操作必须等待另一个操作完成后才能执行下一个操作。 比如一个请求需要等待服务器返回结果之后才能继续处理下一个请求。 同步通讯方式的特点：  简单明了 适用于处理量不大、并发量不高的场景  缺点：  阻塞等待：在同步通讯过程中，请求方需要等待响应方返回数">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img.wcw231407.cn/202404151517616.jpeg">
+<meta property="article:published_time" content="2024-04-15T06:12:09.000Z">
+<meta property="article:modified_time" content="2024-04-15T07:34:50.589Z">
+<meta property="article:author" content="wcw">
+<meta property="article:tag" content="rabbitmq">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img.wcw231407.cn/202404151517616.jpeg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://user.wcw231407.cn/2024/04/15/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94RabbitMQ/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.12.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: {"limitDay":365,"position":"top","messagePrev":"It has been","messageNext":"days since the last update, the content of the article may be outdated."},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: wcw","link":"链接: ","source":"来源: Fancydog‘s blogs","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringCloud实用篇（五）——RabbitMQ',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-15 15:34:50'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><!-- hexo injector head_end start --><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-categories-card@1.0.0/lib/categorybar.css"><link rel="stylesheet" href="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.css" media="print" onload="this.media='all'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.0.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/head.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://img.wcw231407.cn/202404151517616.jpeg')"><nav id="nav"><span id="blog-info"><a href="/" title="Fancydog‘s blogs"><span class="site-name">Fancydog‘s blogs</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fa fa-heartbeat"></i><span> 娱乐</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/Gallery/"><i class="fa-fw fas fa-images"></i><span> 照片</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/comments/"><i class="fa-fw fas fa-envelope-open"></i><span> 留言板</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);"><i class="fa-fw fas fa-list"></i><span> 链接</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringCloud实用篇（五）——RabbitMQ</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-04-15T06:12:09.000Z" title="发表于 2024-04-15 14:12:09">2024-04-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-04-15T07:34:50.589Z" title="更新于 2024-04-15 15:34:50">2024-04-15</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringCloud/">SpringCloud</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringCloud实用篇（五）——RabbitMQ"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="服务异步通讯"><a href="#服务异步通讯" class="headerlink" title="服务异步通讯"></a><strong>服务异步通讯</strong></h1><h2 id="MQ（消息队列）"><a href="#MQ（消息队列）" class="headerlink" title="MQ（消息队列）"></a><strong>MQ（消息队列）</strong></h2><h3 id="同步通讯和异步通讯"><a href="#同步通讯和异步通讯" class="headerlink" title="同步通讯和异步通讯"></a><strong>同步通讯和异步通讯</strong></h3><p>学习MQ之前，先学习同步通讯和异步通讯</p>
+<p><strong>同步通讯</strong></p>
+<p>同步通讯指的是通讯双方需要在时间上保持一致，也就是一个操作必须等待另一个操作完成后才能执行下一个操作。</p>
+<p>比如一个请求需要等待服务器返回结果之后才能继续处理下一个请求。</p>
+<p>同步通讯方式的特点：</p>
+<ol>
+<li>简单明了</li>
+<li>适用于处理量不大、并发量不高的场景</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>阻塞等待：在同步通讯过程中，请求方需要等待响应方返回数据，这个等待过程可能会阻塞请求方的线程，从而导致程序无法继续执行其他任务。</li>
+<li>慢速处理：由于同步通讯需要等待响应方返回数据后再进行下一步处理，所以它的处理速度相对慢，特别是在高并发量和大数据量的情况下。</li>
+<li>处理逻辑复杂：同步通讯需要明确的时间规划和处理顺序，这往往需要编写更复杂的代码逻辑，增加了程序的开发难度和维护成本。</li>
+<li>可靠性低：由于同步通讯需要双方在时间上保持一致，所以如果其中一个方出现了问题，可能会导致整个通讯过程失败，进而影响到整个系统的正常运行。</li>
+</ol>
+<p>同步调用存在问题：</p>
+<ol>
+<li>耦合度高：每次加入新的需求，都要修改原来的代码</li>
+<li>性能下降：调用者需要等待服务提供者响应，如果调用链过长则响应时间等于每次调用的时间之和。</li>
+<li>资源浪费：调用链中的每个服务在等待响应过程中，不能释放请求占用的资源，高并发场景下会极度浪费系统资源</li>
+<li>级联失败：如果服务提供者出现问题，所有调用方都会跟着出问题，如同多米诺骨牌一样，迅速导致整个微服务群故障</li>
+</ol>
+<p><strong>异步通讯</strong></p>
+<p>异步通讯则是指通讯双方不需要时间上保持一致，也就是一个操作可以在另一个操作执行的过程中继续执行。</p>
+<p>异步通讯方式特点：</p>
+<ol>
+<li>高效性</li>
+<li>灵活性</li>
+<li>适用于处理大数据量、高并发量的场景</li>
+</ol>
+<p>缺点：</p>
+<ol>
+<li>多线程开销：由于异步通讯需要使用多线程来处理并发请求，所以会占用更多的系统资源和内存空间，进而增加系统开销和负担。</li>
+<li>处理逻辑复杂：由于异步通讯需要使用回调函数等机制来处理回应消息，所以编写程序时需要设计更复杂的逻辑和代码结构。</li>
+<li>可读性低：异步通讯中的回调函数容易形成层层嵌套的调用关系，这会影响程序的可读性和可维护性。</li>
+<li>调试难度大：由于异步通讯中的执行顺序不是固定的，同时又涉及到多线程、事件驱动等复杂的技术，所以对程序进行调试比同步通讯更为困难。</li>
+</ol>
+<p>异步通讯的典型例子包括消息队列、事件驱动等。</p>
+<p>在团队合作中的异步通信发生在没有实时对话或交互的情况下，比如通过邮件、留言等方式进行沟通；而同步通信则是在实时对话或交互的情况下进行，比如在线会议、视频通话等。需要根据具体的情况选择使用异步或同步通讯方式，以达到最佳的工作效果。</p>
+<p><img src="http://img.wcw231407.cn/202404151415161.png" alt="image-20240415141551972"></p>
+<blockquote>
+<p>统一发送，但是服务执行的时间并不要同时完成</p>
+<p>异步调用方式其实就是基于消息通知的方式，一般包含三个角色：</p>
+<ul>
+<li><p>消息发送者：投递消息的人，就是原来的调用方</p>
+</li>
+<li><p>消息代理：管理、暂存、转发消息，你可以把它理解成微信服务器</p>
+</li>
+<li><p>消息接收者：接收和处理消息的人，就是原来的服务提供方</p>
+</li>
+</ul>
+</blockquote>
+<p><img src="https://img.wcw231407.cn/202404151417659.png" alt="image-20240415141728572">异步调用优势</p>
+<ol>
+<li>服务解耦</li>
+<li>性能提升，吞吐量提高</li>
+<li>服务没有强依赖，不担心级联失败问题</li>
+<li>流量削峰</li>
+</ol>
+<p><img src="https://img.wcw231407.cn/202404151418077.png" alt="image-20240415141817012"></p>
+<p>四种MQ：主要是使用RabbiMQ 、RocketMQ、Kafka</p>
+<p><img src="http://img.wcw231407.cn/202404151418966.png" alt="image-20240415141842883"></p>
+<p><img src="http://img.wcw231407.cn/202404151418433.png" alt="image-20240415141855359"></p>
+<h2 id="RabbitMQ"><a href="#RabbitMQ" class="headerlink" title="RabbitMQ"></a><strong>RabbitMQ</strong></h2><h3 id="介绍与安装"><a href="#介绍与安装" class="headerlink" title="介绍与安装"></a><strong>介绍与安装</strong></h3><p>RabbitMQ是基于Erlang语言开发的开源消息通信中间件，官网地址：</p>
+<p><a target="_blank" rel="noopener" href="https://www.rabbitmq.com/">Messaging that just works — RabbitMQ</a> 接下来，我们就学习它的基本概念和基础用法。</p>
+<p>将提供的mq.tar文件拉近服务器</p>
+<p>执行代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker load -i mq.tar</span><br></pre></td></tr></table></figure>
+
+<p>我们同样基于Docker来安装RabbitMQ，使用下面的命令即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">docker run \</span><br><span class="line"> -e RABBITMQ_DEFAULT_USER=itheima \</span><br><span class="line"> -e RABBITMQ_DEFAULT_PASS=123321 \</span><br><span class="line"> -v mq-plugins:/plugins \</span><br><span class="line"> --name mq \</span><br><span class="line"> --hostname mq \</span><br><span class="line"> -p 15672:15672 \</span><br><span class="line"> -p 5672:5672 \</span><br><span class="line"> --network hmall \</span><br><span class="line"> -d \</span><br><span class="line"> rabbitmq:3.8-management</span><br></pre></td></tr></table></figure>
+
+<p>如果拉取镜像困难的话，可以使用课前资料给大家准备的镜像，利用docker load命令加载：</p>
+<p><img src="https://img.wcw231407.cn/202404151420015.png" alt="image-20240415142034937"></p>
+<p>可以看到在安装命令中有两个映射的端口：</p>
+<ul>
+<li>15672：RabbitMQ提供的管理控制台的端口</li>
+<li>5672：RabbitMQ的消息发送处理接口</li>
+</ul>
+<p>安装完成后，我们访问 <a href="http://192.168.150.101:15672即可看到管理控制台。首次访问需要登录，默认的用户名和密码在配置文件中已经指定了。登录后即可看到管理控制台总览页面：">http://192.168.150.101:15672即可看到管理控制台。首次访问需要登录，默认的用户名和密码在配置文件中已经指定了。登录后即可看到管理控制台总览页面：</a></p>
+<p><img src="https://img.wcw231407.cn/202404151421893.png" alt="image-20240415142105800">安装完成后，我们访问</p>
+<p><a target="_blank" rel="noopener" href="http://192.168.150.101:15672/">http://192.168.150.101:15672</a>即可看到管理控制台。首次访问需要登录，默认的用户名和密码在配置文件中已经指定了。 登录后即可看到管理控制台总览页面：</p>
+<p>RabbitMQ对应的架构如图：</p>
+<p><img src="https://img.wcw231407.cn/202404151421611.png" alt="image-20240415142159538"></p>
+<p>其中包含几个概念：</p>
+<ul>
+<li>virtual-host：虚拟主机，起到数据管理的作用</li>
+<li>publisher：消息发送者</li>
+<li>consumer：消息的消费者</li>
+<li>queue：队列，存储消息</li>
+<li>exchange：交换机，负责路由消息</li>
+</ul>
+<h3 id="快速入门"><a href="#快速入门" class="headerlink" title="快速入门"></a><strong>快速入门</strong></h3><p>需求：在RabbitMQ的控制台完成下列操作：</p>
+<ul>
+<li>新建队列hello.queue1和hello.queue2</li>
+<li>向默认的amp.fanout交换机发送一条消息</li>
+<li>查看是否达到hello.queue1和hello.queue2</li>
+</ul>
+<h4 id="交换机"><a href="#交换机" class="headerlink" title="交换机"></a><strong>交换机</strong></h4><p>我们打开Exchanges选项卡，可以看到已经存在很多交换机：我们点击任意交换机，即可进入交换机详情页面。仍然会利用控制台中的publish message 发送一条消息：</p>
+<p><img src="https://img.wcw231407.cn/202404151423272.png" alt="image-20240415142337166"></p>
+<p>这里是由控制台模拟了生产者发送的消息。由于没有消费者存在，最终消息丢失了，这样说明交换机没有存储消息的能力。</p>
+<p><img src="https://img.wcw231407.cn/202404151425774.png" alt="image-20240415142508692"></p>
+<p><img src="http://img.wcw231407.cn/202404151425683.png" alt="image-20240415142537622"></p>
+<h4 id="队列"><a href="#队列" class="headerlink" title="队列"></a><strong>队列</strong></h4><p>我们打开Queues选项卡，新建一个队列：</p>
+<p>命名为hello.queue1：</p>
+<p>再以相同的方式，创建一个队列，密码为hello.queue2，最终队列列表如下：</p>
+<p>此时，我们再次向amq.fanout交换机发送一条消息。会发现消息依然没有到达队列！！</p>
+<p>怎么回事呢？</p>
+<p>发送到交换机的消息，只会路由到与其绑定的队列，因此仅仅创建队列是不够的，我们还需要将其与交换机绑定。</p>
+<p><img src="https://img.wcw231407.cn/202404151427208.png" alt="image-20240415142737157"></p>
+<p><img src="https://img.wcw231407.cn/202404151427362.png" alt="image-20240415142753261"></p>
+<p><img src="https://img.wcw231407.cn/202404151428067.png" alt="image-20240415142810006"></p>
+<h4 id="绑定关系"><a href="#绑定关系" class="headerlink" title="绑定关系"></a><strong>绑定关系</strong></h4><p>点击Exchanges选项卡，点击amq.fanout交换机，进入交换机详情页，然后点击Bindings菜单，在表单中填写要绑定的队列名称：</p>
+<p>相同的方式，将hello.queue2也绑定到改交换机。</p>
+<p>最终，绑定结果如下：</p>
+<p><img src="https://img.wcw231407.cn/202404151428903.png" alt="image-20240415142854852"></p>
+<p><img src="http://img.wcw231407.cn/202404151429315.png" alt="image-20240415142910259"></p>
+<h4 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a><strong>发送消息</strong></h4><p>再次回到exchange页面，找到刚刚绑定的amq.fanout，点击进入详情页，再次发送一条消息：</p>
+<p>回到Queues页面，可以发现hello.queue中已经有一条消息了：</p>
+<p>点击队列名称，进入详情页，查看队列详情，这次我们点击get message：</p>
+<p>可以看到消息到达队列了：</p>
+<p>这个时候如果有消费者监听了MQ的hello.queue1或hello.queue2队列，自然就能接收到消息了。</p>
+<p><img src="http://img.wcw231407.cn/202404151429636.png" alt="image-20240415142942583"></p>
+<p><img src="https://img.wcw231407.cn/202404151429569.png" alt="image-20240415142957475"></p>
+<p><img src="https://img.wcw231407.cn/202404151430866.png" alt="image-20240415143016803"></p>
+<p><img src="https://img.wcw231407.cn/202404151430778.png" alt="image-20240415143034707"></p>
+<h3 id="数据隔离"><a href="#数据隔离" class="headerlink" title="数据隔离"></a><strong>数据隔离</strong></h3><p>需求：在RabbitMQ的控制台完成下列操作：</p>
+<ul>
+<li>新建一个用户hamall</li>
+<li>为hmall用户创建一个virtual host</li>
+<li>测试不同virtual host之间的数据隔离现象</li>
+</ul>
+<h4 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a><strong>用户管理</strong></h4><p>点击Admin选项卡，首先会看到RabbitMQ控制台的用户管理界面：这里的用户都是RabbitMQ的管理或运维人员。目前只有安装RabbitMQ时添加的itheima这个用户。仔细观察用户表格中的字段，如下：</p>
+<p><img src="https://img.wcw231407.cn/202404151431372.png" alt="image-20240415143156267"></p>
+<ul>
+<li>Name</li>
+</ul>
+<p>：itheima，也就是用户名</p>
+<ul>
+<li>Tags</li>
+</ul>
+<p>：administrator，说明itheima用户是超级管理员，拥有所有权限</p>
+<ul>
+<li>Can access virtual host</li>
+</ul>
+<p>： &#x2F;，可以访问的virtual host，这里的&#x2F;是默认的virtual host</p>
+<p>对于小型企业而言，出于成本考虑，我们通常只会搭建一套MQ集群，公司内的多个不同项目同时使用。这个时候为了避免互相干扰， 我们会利用virtual host的隔离特性，将不同项目隔离。一般会做两件事情：</p>
+<ul>
+<li>给每个项目创建独立的运维账号，将管理权限分离。</li>
+<li>给每个项目创建不同的</li>
+</ul>
+<p>virtual host，将每个项目的数据隔离。</p>
+<p>比如，我们给黑马商城创建一个新的用户，命名为hmall：你会发现此时hmall用户没有任何virtual host的访问权限：别急，接下来我们就来授权。</p>
+<p><img src="https://img.wcw231407.cn/202404151432456.png" alt="image-20240415143237400"></p>
+<p><img src="https://img.wcw231407.cn/202404151435418.png" alt="image-20240415143522340"></p>
+<h4 id="virtual-host"><a href="#virtual-host" class="headerlink" title="virtual host"></a><strong>virtual host</strong></h4><p>我们先退出登录：切换到刚刚创建的hmall用户登录，然后点击Virtual Hosts菜单，进入virtual host管理页：可以看到目前只有一个默认的virtual host，名字为 &#x2F;。 我们可以给黑马商城项目创建一个单独的virtual host，而不是使用默认的&#x2F;。创建完成后如图：由于我们是登录hmall账户后创建的virtual host，因此回到users菜单，你会发现当前用户已经具备了对&#x2F;hmall这个virtual host的访问权限了：</p>
+<p><img src="https://img.wcw231407.cn/202404151436656.png" alt="image-20240415143603599"></p>
+<p><img src="https://img.wcw231407.cn/202404151436723.png" alt="image-20240415143623670"></p>
+<p><img src="https://img.wcw231407.cn/202404151436711.png" alt="image-20240415143637627"></p>
+<p><img src="https://img.wcw231407.cn/202404151436713.png" alt="image-20240415143650641"></p>
+<p><img src="https://img.wcw231407.cn/202404151437464.png" alt="image-20240415143705398"></p>
+<p>此时，点击页面右上角的virtual host下拉菜单，切换virtual host为 &#x2F;hmall：然后再次查看queues选项卡，会发现之前的队列已经看不到了：这就是基于virtual host的隔离效果。</p>
+<p><img src="https://img.wcw231407.cn/202404151438869.png" alt="image-20240415143850767"></p>
+<p><img src="https://img.wcw231407.cn/202404151439878.png" alt="image-20240415143907825"></p>
+<h3 id="java客户端-快速入门"><a href="#java客户端-快速入门" class="headerlink" title="java客户端-快速入门"></a><strong>java客户端-快速入门</strong></h3><p>AMQP(Advanced Message Queuing Protocol，用于在应用程序之间传递业务消息的开放标准。该协议与语言和平台无关，更符合微服务中独立性的要求)</p>
+<p>Spring AMQP（是基于AMQP协议定义的一套API规范，提供了模板来发送和接收消息。包含两部分，其中spring-amqp）是基础抽象，spring-rabbit是底层的默认实现。</p>
+<p>需求如下：</p>
+<ul>
+<li>利用控制台创建队列simple.queue</li>
+<li>在publisher服务中，利用SpringAMQP直接向simple.queue分手发送消息</li>
+<li>在consumer服务中，利用SpringAMQP编写消费者，监听simple.queue队列</li>
+</ul>
+<p>1.创建队列simple.queue</p>
+<p><img src="/https/:img.wcw231407.cn/202404151450125.png" alt="image-20240415145026046"></p>
+<p>2.在父工程中中引入spring-amqp依赖，这样publish和consumer服务都可以使用：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--AMQP依赖，包含RabbitMQ--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-amqp&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>3.在每一个微服务中引入 MQ服务端信息，这样微服务才能连接到RabbitMQ</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">  rabbitmq:</span><br><span class="line">    host: 112.124.30.198</span><br><span class="line">    port: 5672</span><br><span class="line">    virtual-host: /wcw</span><br><span class="line">    username: hmall</span><br><span class="line">    password: 123</span><br></pre></td></tr></table></figure>
+
+<p>4.SpringAMQP提供了RabbitTemplate工具类，方便我们发送代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Autowored</span><br><span class="line">private RabbitTemplate rabbitTemplate;</span><br><span class="line">@Test</span><br><span class="line">public void testSimpleQueue()&#123;</span><br><span class="line">    //队列名称</span><br><span class="line">    String quwueName = &quot;simplate.queue&quot;;</span><br><span class="line">    String message = &quot;hello,spring amqp&quot;;</span><br><span class="line">    rabbitTemplate.converAndSend(queueName,message);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>5.接收消息</p>
+<p>SpringAMQP提供声明式的消息监听，我们只需要通过注注解在方法上声明要监听的队列名称，将来SpringAMQP就会把消息传递给当前的方法：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Self4j</span><br><span class="line">@Component</span><br><span class="line">public class SpringRabbitListener&#123;</span><br><span class="line">    @RabbitListener(queues = &quot;simple.queue&quot;)</span><br><span class="line">    public void listenSimpleQueueMessage(String msg) throws InterruptedException &#123;</span><br><span class="line">        log.info(&quot;spring 消费者接收消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">        if(true)&#123;</span><br><span class="line">            throw new MessageConversionException(&quot;故意的&quot;);        </span><br><span class="line">        &#125;</span><br><span class="line">        log.info(&quot;消息处理完成&quot;);    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.wcw231407.cn/202404151452806.png" alt="image-20240415145208689"></p>
+<blockquote>
+<p>SpringAMQP如何收发消息？</p>
+<p>1.引入spring-boot-starter-amqp依赖</p>
+<p>2.配置rabbitmq服务端消息</p>
+<p>3.利用RabbitTemplate发送消息</p>
+<p>4.利用@RabbitListener注解声明要监听的队列，监听消息</p>
+</blockquote>
+<h3 id="Work模型"><a href="#Work模型" class="headerlink" title="Work模型"></a><strong>Work模型</strong></h3><blockquote>
+<p>模拟workQueue，实现一个队列绑定多个消费者</p>
+<p>​    1.在RabbitMQ的控制台创建一个队列，名为work.queue</p>
+<p>​    2.在publishe服务中定义测试方法，在1秒内产生50条消息，发送到work.queue</p>
+<p>​    3.在consumer服务中定义两个消息监听者，都监听work.queue队列</p>
+<p>​    4.消费者1每秒处理50条消息，消费者2每秒处理5条消息</p>
+</blockquote>
+<p>1.在RabbitMQ的控制台创建一个队列，名为work.queue</p>
+<p><img src="https://img.wcw231407.cn/202404151453197.png" alt="image-20240415145352131"></p>
+<p>2.在publisher服务中定义测试方法，在1秒内产生50条消息，发送到work.queue</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">void tesWorkQueue() throws InterruptedException&#123;</span><br><span class="line">    String queueName = &quot;work.queue&quot;;</span><br><span class="line">    for(int i = 0; i &lt; 50; i++ )&#123;</span><br><span class="line">        String msg = &quot;hello,work,message_&quot;+i;</span><br><span class="line">        rabbitTemplate.convertAndSend(queueName,msg);</span><br><span class="line">        Thread.sleep(20);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.在consumer服务中定义两个消息监听者，都监听work.queue队列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">@Slf4j</span><br><span class="line">@Component</span><br><span class="line">public class MqListener &#123;</span><br><span class="line"></span><br><span class="line">    @RabbitListener(queues = &quot;simple.queue&quot;)</span><br><span class="line">    public  void listenSimpleQueue(String msg)&#123;</span><br><span class="line">        System.out.println(&quot;spring 消费者接收消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @RabbitListener(queues = &quot;work.queue&quot;)</span><br><span class="line">    public  void listenWorkQueue1(String msg)&#123;</span><br><span class="line">        System.out.println(&quot;消费者1 收到WorkQueue消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    @RabbitListener(queues = &quot;work.queue&quot;)</span><br><span class="line">    public  void listenWorkQueue2(String msg)&#123;</span><br><span class="line">        System.err.println(&quot;消费者2 收到WorkQueue消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，RabbitMQ的会将消息依次轮询投递给绑定在队列上的每一个消费者。但这并没有考虑到消费者是否已经处理完消息，可能出现消息堆积。</p>
+<p>因此我们需要修改application.yml,设置preFetch值为1，确保同一时刻最多投递给消费者1条消息：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">spring:</span><br><span class="line">    rabbitmq:</span><br><span class="line">        listener:</span><br><span class="line">          simple:</span><br><span class="line">            prefetch: 1#每次只能获取一条消息，处理完成才能获取下一个消息</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.wcw231407.cn/202404151454806.png" alt="image-20240415145457739"></p>
+<blockquote>
+<p>work模型的使用：</p>
+<ul>
+<li>多个消费者绑定到一个队列，可以加快消息处理速度</li>
+<li>同一个消息只会被一个消费者处理</li>
+<li>通过设置prefetch来控制消费者预取的消息数量，处理完一条处理下一条，实现能者多劳</li>
+</ul>
+</blockquote>
+<h3 id="交换机-1"><a href="#交换机-1" class="headerlink" title="交换机"></a><strong>交换机</strong></h3><p>真正生产环境都会经过exchange来发送消息，而不是直接发送给队列，交换机的类型有以下三钟：</p>
+<ul>
+<li>Fanout：广播</li>
+<li>Direct：定向</li>
+<li>Topic：话题</li>
+</ul>
+<h4 id="Fanout交换机"><a href="#Fanout交换机" class="headerlink" title="Fanout交换机"></a><strong>Fanout交换机</strong></h4><p>Fanout Exchange 会将接收到每一个跟其绑定的queue，所以也叫广播模式</p>
+<p><img src="https://img.wcw231407.cn/202404151456652.png" alt="image-20240415145605575"></p>
+<blockquote>
+<p>实现思路：</p>
+<p>​	在RabbitMQ控制台中，声明队列fanout.queue1和fanout.queue2</p>
+<p>​	在RabbitMQ控制台中，声明交换机hmall。fanout,将两个队列与其绑定</p>
+<p>​	在consumer服务中，编写两个消费者方法，分别监听fanout.queue1和fanout.queue2</p>
+<p>​	在publisher中编写测试方法，向hmall.fanout发送消息</p>
+</blockquote>
+<p>1.在RabbitMQ控制台中，声明队列fanout.queue1和fanout.queue2</p>
+<p><img src="https://img.wcw231407.cn/202404151456532.png" alt="image-20240415145656482"></p>
+<p>2.在RabbitMQ控制台中，声明交换机hmall.fanout,将两个队列与其绑定</p>
+<p><img src="https://img.wcw231407.cn/202404151457097.png" alt="image-20240415145719047"></p>
+<p><img src="https://img.wcw231407.cn/202404151457313.png" alt="image-20240415145729249"></p>
+<p>3.在consumer服务中，编写两个消费者方法，分别监听fanout.queue1和fanout.queue2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@RabbitListener(queues = &quot;fanout.queue1&quot;)</span><br><span class="line">public  void listenFanoutQueue1(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者1 收到fanoutQueue1消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    Thread.sleep(20);</span><br><span class="line">&#125;</span><br><span class="line">@RabbitListener(queues = &quot;fanout.queue2&quot;)</span><br><span class="line">public  void listenFanoutQueue2(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者2 收到fanoutQueue2消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    Thread.sleep(100);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.在publisher中编写测试方法，向hmall.fanout发送消息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">void testSendFanout()&#123;</span><br><span class="line">    String exChangeName = &quot;hmall.fanout&quot;;</span><br><span class="line">    String msg = &quot;hello,everyone&quot;;</span><br><span class="line">    rabbitTemplate.convertAndSend(exChangeName,null,msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.wcw231407.cn/202404151458335.png" alt="image-20240415145857235"></p>
+<blockquote>
+<p>交换机的作用是什么？</p>
+<ul>
+<li>接接收publisher发送的消息</li>
+<li>将消息按规则路由到与之绑定的队列</li>
+<li>FanoutExchange的会将消息路由到每个绑定的队列</li>
+</ul>
+</blockquote>
+<h4 id="Direct交换机"><a href="#Direct交换机" class="headerlink" title="Direct交换机"></a><strong>Direct交换机</strong></h4><p>Direct Exchange会将接收到消息根据规则路由到指定的Queue，因此成为定向路由</p>
+<ul>
+<li>每个Queue都与Exchange设置一个BindKey</li>
+<li>发布者发送消息时，指定消息的RoutingKry</li>
+<li>Exchange将消息路由到BindingKey与消息RoutingKey一致的队列</li>
+</ul>
+<p><img src="https://img.wcw231407.cn/202404151459601.png" alt="image-20240415145958511"></p>
+<blockquote>
+<p>需求：</p>
+<ul>
+<li><p>在RabbitMQ控制台中，声明对列direct.queue1和direct.queue2</p>
+</li>
+<li><p>在RabbitMQ控制台中，声明交换机hmall.dirext,将两个队列与其绑定</p>
+</li>
+<li><p>在consumer服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2</p>
+</li>
+<li><p>在publicsher中编写测试方法，利用不同的RoutingKey向hmall.direct发送消息</p>
+</li>
+</ul>
+</blockquote>
+<p>1.在RabbitMQ控制台中，声明对列direct.queue1和direct.queue2</p>
+<p><strong><img src="https://img.wcw231407.cn/202404151500969.png" alt="image-20240415150056867"></strong></p>
+<p>2.在RabbitMQ控制台中，声明交换机hmall,dirext,将两个队列与其绑定</p>
+<p><img src="https://img.wcw231407.cn/202404151501828.png" alt="image-20240415150117746"></p>
+<p>3.在consumer服务中，编写两个消费者方法，分别监听direct.queue1和direct.queue2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">@RabbitListener(queues = &quot;direct.queue1&quot;)</span><br><span class="line">public  void listenDirectQueue1(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者1 收到fanoutQueue1消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    Thread.sleep(20);</span><br><span class="line">&#125;</span><br><span class="line">@RabbitListener(queues = &quot;direct.queue2&quot;)</span><br><span class="line">public  void listenDirectQueue2(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者2 收到fanoutQueue2消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    Thread.sleep(100);</span><br><span class="line">&#125;	</span><br></pre></td></tr></table></figure>
+
+<p>4.在publicsher中编写测试方法，利用不同的RoutingKey向hmall.direct发送消息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">void testSendDirect1()&#123;</span><br><span class="line">    String exChangeName = &quot;hmall.direct&quot;;</span><br><span class="line">    String msg = &quot;hello,everyone&quot;;</span><br><span class="line">    rabbitTemplate.convertAndSend(exChangeName,&quot;red&quot;,msg);</span><br><span class="line">&#125;</span><br><span class="line">@Test</span><br><span class="line">void testSendDirect2()&#123;</span><br><span class="line">    String exChangeName = &quot;hmall.direct&quot;;</span><br><span class="line">    String msg = &quot;hello,everyone&quot;;</span><br><span class="line">    rabbitTemplate.convertAndSend(exChangeName,&quot;blue&quot;,msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>先测试键为red（路由绑定队列共有的键）的测试方法，测试结果如图所示：</p>
+<p><img src="https://img.wcw231407.cn/202404151502815.png" alt="image-20240415150231742"></p>
+<p>在测试键为blue的键（这是directQueue1独有的键），因此如下只有收到directQueue1的消息</p>
+<p><img src="https://img.wcw231407.cn/202404151503221.png" alt="image-20240415150310111"></p>
+<h4 id="Topic交换机"><a href="#Topic交换机" class="headerlink" title="Topic交换机"></a><strong>Topic交换机</strong></h4><p>TopicExchange与DirectExchange类似，区别在于routingKey可以是多个单词的列表，并以.分割</p>
+<ul>
+<li>#：代指0个或多个单词</li>
+<li>*：代指一个单词</li>
+</ul>
+<p><img src="https://img.wcw231407.cn/202404151503570.png" alt="image-20240415150346468"></p>
+<blockquote>
+<p>需求如下：</p>
+<p>1.在RabbitMQ控制台中，声明队列topic.queue1和topic.queue2</p>
+<p>2.在RabbitMQ控制台中，声明交换机hmall.topic,将两个队列与其绑定</p>
+<p>3.在consumer服务中，编写两个消费者方法，分别监听topic.queue1和topic.queue2</p>
+<p>4.publisher中编写测试方法，利用不同的RoutingKey向hmall.topic发送消息</p>
+</blockquote>
+<p>1.在RabbitMQ控制台中，声明队列topic.queue1和topic.queue2</p>
+<p><img src="https://img.wcw231407.cn/202404151504365.png" alt="image-20240415150408303"></p>
+<p>2.在RabbitMQ控制台中，声明交换机hmall.topic,将两个队列与其绑定</p>
+<p><img src="https://img.wcw231407.cn/202404151504160.png" alt="image-20240415150444087"></p>
+<p>3.在consumer服务中，编写两个消费者方法，分别监听topic.queue1和topic.queue2</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@RabbitListener(queues = &quot;topic.queue1&quot;)</span><br><span class="line">public  void listenTopicQueue1(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者1 收到topicQueue1消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">&#125;</span><br><span class="line">@RabbitListener(queues = &quot;topic.queue2&quot;)</span><br><span class="line">public  void listenTopicQueue2(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者2 收到topicQueue2消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.publisher中编写测试方法，利用不同的RoutingKey向hmall.topic发送消息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">void testSendTopic1()&#123;</span><br><span class="line">    String exChangeName = &quot;hmall.topic&quot;;</span><br><span class="line">    String msg = &quot;我来通知你了！！！&quot;;</span><br><span class="line">    rabbitTemplate.convertAndSend(exChangeName,&quot;japan.news&quot;,msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.wcw231407.cn/202404151505386.png" alt="image-20240415150534327"></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">void testSendTopic2()&#123;</span><br><span class="line">    String exChangeName = &quot;hmall.topic&quot;;</span><br><span class="line">    String msg = &quot;今天天气很不错，我的心情特别好！！！&quot;;</span><br><span class="line">    rabbitTemplate.convertAndSend(exChangeName,&quot;chain.weather&quot;,msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.wcw231407.cn/202404151506244.png" alt="image-20240415150626183"></p>
+<blockquote>
+<p>描述下Direct交换机和Topic交换机的差异？</p>
+<ul>
+<li>Topic交换机接收的消息RoutingKey可以是多个单词，以.分割</li>
+<li>Topic交换机与队列绑定时的bingdingKey可以指定通配符</li>
+<li>#：代表0个或多个词</li>
+<li>*：代表1个词</li>
+</ul>
+</blockquote>
+<h3 id="基于注解-RabbitListener声明队列和交换机"><a href="#基于注解-RabbitListener声明队列和交换机" class="headerlink" title="基于注解@RabbitListener声明队列和交换机"></a><strong>基于注解@RabbitListener声明队列和交换机</strong></h3><p>记得停止项目运行在删除上面得交换机和队列</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">//@RabbitListener(queues = &quot;direct.queue1&quot;)</span><br><span class="line">@RabbitListener(bindings = @QueueBinding(</span><br><span class="line">        value = @Queue(name = &quot;direct.queue1&quot;,durable = &quot;true&quot;),</span><br><span class="line">        exchange = @Exchange(name = &quot;hmall.direct&quot;,type = ExchangeTypes.DIRECT),</span><br><span class="line">        key = &#123;&quot;red&quot;,&quot;blue&quot;&#125;</span><br><span class="line">))</span><br><span class="line">public  void listenDirectQueue1(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者1 收到directQueue1消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    Thread.sleep(20);</span><br><span class="line">&#125;</span><br><span class="line">//@RabbitListener(queues = &quot;direct.queue2&quot;)</span><br><span class="line">@RabbitListener(bindings = @QueueBinding(</span><br><span class="line">        value = @Queue(name = &quot;direct.queue2&quot;,durable = &quot;true&quot;),</span><br><span class="line">        exchange = @Exchange(name = &quot;hmall.direct&quot;,type = ExchangeTypes.DIRECT),</span><br><span class="line">        key = &#123;&quot;red&quot;,&quot;yellow&quot;&#125;</span><br><span class="line">))</span><br><span class="line">public  void listenDirectQueue2(String msg) throws InterruptedException&#123;</span><br><span class="line">    System.out.println(&quot;消费者2 收到directQueue2消息：【&quot;+msg+&quot;】&quot;);</span><br><span class="line">    Thread.sleep(100);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://img.wcw231407.cn/202404151508323.png" alt="image-20240415150838262"></p>
+<p><img src="https://img.wcw231407.cn/202404151508232.png" alt="image-20240415150854136"></p>
+<blockquote>
+<p>声明队列、交换机、绑定关系得Bean是什么？</p>
+<ul>
+<li>Queue</li>
+<li>FanoutExchange、DirectExchange、TopicExchange</li>
+<li>Binding</li>
+</ul>
+<p>基于@RabbitListener注解声明队列和交换机有哪些常见注解？</p>
+<ul>
+<li>@Queue</li>
+<li>Exchange</li>
+<li>@QueueBinding</li>
+</ul>
+</blockquote>
+<h3 id="消息转换器"><a href="#消息转换器" class="headerlink" title="消息转换器"></a><strong>消息转换器</strong></h3><p>需求：测试利用SpringAMQP发送对象型的消息</p>
+<ol>
+<li>声明一个队列，名为object.queue</li>
+<li>编写单元测试，向一个队列直接发送一个消息，消息类型为Map</li>
+<li>在控制台查看消息，直接你能发现的问题</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//准备消息</span><br><span class="line">Map&lt;String,Obeject&gt; msg = new HashMap&lt;&gt;();</span><br><span class="line">msg.put(&quot;name&quot;,&quot;Jack&quot;);</span><br><span class="line">msg.put(&quot;age&quot;,21);</span><br></pre></td></tr></table></figure>
+
+<p>1.声明一个队列，名为object.queue</p>
+<p><img src="https://img.wcw231407.cn/202404151509957.png" alt="image-20240415150954892"></p>
+<p>2.编写单元测试，向一个队列直接发送一个消息，消息类型为Map</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line">void  testSendObject()&#123;</span><br><span class="line">    Map&lt;String,Object&gt; msg = new HashMap&lt;&gt;(2);</span><br><span class="line">    msg.put(&quot;name&quot;,&quot;jack&quot;);</span><br><span class="line">    msg.put(&quot;age&quot;,21);</span><br><span class="line">    rabbitTemplate.convertAndSend(&quot;object.queue&quot;,msg);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行测试代码我们发现，队列存的是一串我们不认识的字符串（字节码）</p>
+<p><img src="https://img.wcw231407.cn/202404151510869.png" alt="image-20240415151046809"></p>
+<p>3.引入Jackson依赖</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--Jackson--&gt;</span><br><span class="line">&lt;!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-xml --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;com.fasterxml.jackson.dataformat&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;jackson-dataformat-xml&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<p>4.在启动类上添加下面的bean</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@Bean</span><br><span class="line">public MessageConverter jacksonMessageConvertor()&#123;</span><br><span class="line">    return new Jackson2JsonMessageConverter();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再次启动一下测试类</p>
+<p>然后在rabittmq管理端查看队列，如图：</p>
+<p><img src="https://img.wcw231407.cn/202404151511453.png" alt="image-20240415151155347"></p>
+<p>5.编写一个接收消息的方法</p>
+<p><img src="https://img.wcw231407.cn/202404151512822.png" alt="image-20240415151222747"></p>
+<p><img src="https://img.wcw231407.cn/202404151512352.png" alt="image-20240415151229269"></p>
+<p>第一个被原生的序列化的字节序列当消费者收到时直接报错，第二条被json序列化的数据接收正常</p>
+<p><img src="https://img.wcw231407.cn/202404151513654.png" alt="image-20240415151308584"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn">wcw</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://user.wcw231407.cn/2024/04/15/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94RabbitMQ/">https://user.wcw231407.cn/2024/04/15/SpringCloud%E5%AE%9E%E7%94%A8%E7%AF%87%EF%BC%88%E4%BA%94%EF%BC%89%E2%80%94%E2%80%94RabbitMQ/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://user.wcw231407.cn" target="_blank">Fancydog‘s blogs</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/rabbitmq/">rabbitmq</a></div><div class="post_share"><div class="social-share" data-image="https://img.wcw231407.cn/202404151517616.jpeg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button"><i class="fas fa-qrcode"></i>赞助</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="wechat"/></a><div class="post-qr-code-desc">wechat</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="alipay"/></a><div class="post-qr-code-desc">alipay</div></li></ul></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="/img/head.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="avatar"/></div><div class="author-info__name">wcw</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">20</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">33</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/wcw-001"><i></i><span>🛴前往小家...</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/wcw-001" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:2314075528@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://blog.csdn.net/qq_59400558?type=blog" target="_blank" title="CSDN"><i class="fa fa-book-open"></i></a><a class="social-icon" href="tencent://AddContact/?fromId=45&amp;fromSubId=1&amp;subcmd=all&amp;uin=3227698318&amp;website=www.oicqzone.com" target="_blank" title="QQ"><i class="fab fa-qq"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">This is my Blog</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="toc-number">1.</span> <span class="toc-text">服务异步通讯</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#MQ%EF%BC%88%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">MQ（消息队列）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E9%80%9A%E8%AE%AF%E5%92%8C%E5%BC%82%E6%AD%A5%E9%80%9A%E8%AE%AF"><span class="toc-number">1.1.1.</span> <span class="toc-text">同步通讯和异步通讯</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RabbitMQ"><span class="toc-number">1.2.</span> <span class="toc-text">RabbitMQ</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D%E4%B8%8E%E5%AE%89%E8%A3%85"><span class="toc-number">1.2.1.</span> <span class="toc-text">介绍与安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.2.2.</span> <span class="toc-text">快速入门</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">交换机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%9F%E5%88%97"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">队列</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%91%E5%AE%9A%E5%85%B3%E7%B3%BB"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">绑定关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%91%E9%80%81%E6%B6%88%E6%81%AF"><span class="toc-number">1.2.2.4.</span> <span class="toc-text">发送消息</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E9%9A%94%E7%A6%BB"><span class="toc-number">1.2.3.</span> <span class="toc-text">数据隔离</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-number">1.2.3.1.</span> <span class="toc-text">用户管理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#virtual-host"><span class="toc-number">1.2.3.2.</span> <span class="toc-text">virtual host</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#java%E5%AE%A2%E6%88%B7%E7%AB%AF-%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8"><span class="toc-number">1.2.4.</span> <span class="toc-text">java客户端-快速入门</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Work%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.5.</span> <span class="toc-text">Work模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%A4%E6%8D%A2%E6%9C%BA-1"><span class="toc-number">1.2.6.</span> <span class="toc-text">交换机</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Fanout%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">1.2.6.1.</span> <span class="toc-text">Fanout交换机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Direct%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">1.2.6.2.</span> <span class="toc-text">Direct交换机</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Topic%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">1.2.6.3.</span> <span class="toc-text">Topic交换机</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E6%B3%A8%E8%A7%A3-RabbitListener%E5%A3%B0%E6%98%8E%E9%98%9F%E5%88%97%E5%92%8C%E4%BA%A4%E6%8D%A2%E6%9C%BA"><span class="toc-number">1.2.7.</span> <span class="toc-text">基于注解@RabbitListener声明队列和交换机</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B6%88%E6%81%AF%E8%BD%AC%E6%8D%A2%E5%99%A8"><span class="toc-number">1.2.8.</span> <span class="toc-text">消息转换器</span></a></li></ol></li></ol></li></ol></div></div></div></div></main><footer id="footer" style="background-image: url('https://img.wcw231407.cn/202404151517616.jpeg')"><div id="footer-wrap"><div class="copyright">&copy;2023 - 2024 By wcw</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.12.0"></script><script src="/js/main.js?v=4.12.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.32/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/dist/click-heart.min.js" async="async" mobile="false"></script><script src="https://cdn.jsdelivr.net/npm/pjax@0.2.8/pjax.min.js"></script><script>let pjaxSelectors = ["head > title","#config-diff","#body-wrap","#rightside-config-hide","#rightside-config-show",".js-pjax"]
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"]):not([href="/music/"]):not([href="/no-pjax/"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:send', function () {
+
+  // removeEventListener
+  btf.removeGlobalFnEvent('pjax')
+  btf.removeGlobalFnEvent('themeChange')
+
+  document.getElementById('rightside').classList.remove('rightside-show')
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+  typeof disqusjs === 'object' && disqusjs.destroy()
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof panguInit === 'function' && panguInit()
+
+  // google analytics
+  typeof gtag === 'function' && gtag('config', '', {'page_path': window.location.pathname});
+
+  // baidu analytics
+  typeof _hmt === 'object' && _hmt.push(['_trackPageview',window.location.pathname]);
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+})
+
+document.addEventListener('pjax:error', e => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --><script data-pjax>
+    function butterfly_categories_card_injector_config(){
+      var parent_div_git = document.getElementById('recent-posts');
+      var item_html = '<style>li.categoryBar-list-item{width:32.3%;}.categoryBar-list{max-height: 190px;overflow:auto;}.categoryBar-list::-webkit-scrollbar{width:0!important}@media screen and (max-width: 650px){.categoryBar-list{max-height: 160px;}}</style><div class="recent-post-item" style="height:auto;width:100%;padding:0px;"><div id="categoryBar"><ul class="categoryBar-list"></ul></div></div>';
+      console.log('已挂载butterfly_categories_card')
+      parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+      }
+    if( document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    butterfly_categories_card_injector_config()
+    }
+  </script><script data-pjax>
+  function butterfly_footer_beautify_injector_config(){
+    var parent_div_git = document.getElementById('footer-wrap');
+    var item_html = '<div id="workboard"></div><p id="ghbdages"><a class="github-badge" target="_blank" href="https://hexo.io/" style="margin-inline:5px" data-title="博客框架为Hexo_v6.2.0" title=""><img src="https://img.shields.io/badge/Frame-Hexo-blue?style=flat&amp;logo=hexo" alt=""/></a><a class="github-badge" target="_blank" href="https://butterfly.js.org/" style="margin-inline:5px" data-title="主题版本Butterfly_v4.3.1" title=""><img src="https://img.shields.io/badge/Theme-Butterfly-6513df?style=flat&amp;logo=bitdefender" alt=""/></a><a class="github-badge" target="_blank" href="https://vercel.com/" style="margin-inline:5px" data-title="本站采用多线部署，主线路托管于Vercel" title=""><img src="https://img.shields.io/badge/Hosted-Vercel-brightgreen?style=flat&amp;logo=Vercel" alt=""/></a><a class="github-badge" target="_blank" href="https://dashboard.4everland.org/" style="margin-inline:5px" data-title="本站采用多线部署，备用线路托管于4EVERLAND" title=""><img src="https://img.shields.io/badge/Hosted-4EVERLAND-22DDDD?style=flat&amp;logo=IPFS" alt=""/></a><a class="github-badge" target="_blank" href="https://github.com/" style="margin-inline:5px" data-title="本站项目由Github托管" title=""><img src="https://img.shields.io/badge/Source-Github-d021d6?style=flat&amp;logo=GitHub" alt=""/></a><a class="github-badge" target="_blank" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" style="margin-inline:5px" data-title="本站采用知识共享署名-非商业性使用-相同方式共享4.0国际许可协议进行许可" title=""><img src="https://img.shields.io/badge/Copyright-BY--NC--SA%204.0-d42328?style=flat&amp;logo=Claris" alt=""/></a></p>';
+    console.log('已挂载butterfly_footer_beautify')
+    parent_div_git.insertAdjacentHTML("beforeend",item_html)
+    }
+  var elist = 'null'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_footer_beautify_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_footer_beautify_injector_config();
+  }
+  </script><script async src="https://unpkg.zhimg.com/hexo-butterfly-footer-beautify@1.0.0/lib/runtime.min.js"></script><!-- hexo injector body_end end --><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginModelPath":"assets/","model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"right","width":200,"height":400},"mobile":{"show":"ture"},"rect":"opacity:0.7","dialog":{"enable":true,"hitokoto":true,"text":["一切的一切只是开始"]},"log":false,"pluginJsPath":"lib/","pluginRootPath":"live2dw/","tagMode":false});</script></body></html>
