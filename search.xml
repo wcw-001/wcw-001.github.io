@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>nginx</title>
+      <link href="/2024/04/18/page/"/>
+      <url>/2024/04/18/page/</url>
+      
+        <content type="html"><![CDATA[<h1 id="nginx"><a href="#nginx" class="headerlink" title="nginx"></a><strong>nginx</strong></h1><blockquote><p>公司产品出现瓶颈？</p></blockquote><p>我们公司项目刚刚刚上线的时候，并发量小，用户使用的少，所以在低并发的情况下，一个jar包启动应用就够了，然后内部tomcat返回内容给用户</p><p><img src="https://img.wcw231407.cn/202404180857981.png" alt="image-20240418085711867"></p><p>但是慢慢的，使用我们平台的用户多了，并发量慢慢慢增大了，这时候一台服务器满足不了我们的需求了</p><p><img src="https://img.wcw231407.cn/202404180858953.png" alt="image-20240418085800876"></p><p>于是我们横向扩展，又增加了服务器。这时候几个项目启动在不同的服务器上，用户要访问，就需要增加一个代理访问器了，通过代理服务器来帮我们转发和处理请求</p><p><img src="https://img.wcw231407.cn/202404180858076.png" alt="image-20240418085815984"></p><p>我们希望这个代理服务器可以帮助我们接收用户请求，然后将用户的请求按照规则帮我们转发到不同的服务器节点之上。这个过程用户是无感知的，用户并不知道是哪个服务器返回的结果，我们还希望它可以按照服务器的性能提供不同权重的选择。保证最佳体验！所以我们使用了ngnix</p><p>直接访问服务器产生的问题：</p><p><img src="https://img.wcw231407.cn/202404180900332.png" alt="image-20240418090044247"></p><p>代理：</p><p><img src="https://img.wcw231407.cn/202404180901297.png" alt="image-20240418090106143"></p><blockquote><p>架构的核心精髓：没有什么是加一层解决不了的</p></blockquote><p>nginx反向代理的好处：</p><ul><li>提高访问速度</li><li>进行负载均衡</li><li>保证后端服务安全</li></ul><p>所谓负载均衡，就是把大量的请求按照我们指定的方式均衡的分配给集群中的每台服务器</p><h2 id="nginx是什么？"><a href="#nginx是什么？" class="headerlink" title="nginx是什么？"></a><strong>nginx是什么？</strong></h2><p><a href="https://m.baidu.com/s?word=Nginx&sa=re_dqa_zy">Nginx<em></em></a> 是一款高性能的 Web 服务器和反向代理服务器，同时支持 <a href="https://m.baidu.com/s?word=IMAP&sa=re_dqa_zy">IMAP<em></em></a>、<a href="https://m.baidu.com/s?word=POP3&sa=re_dqa_zy">POP3<em></em></a> 和 <a href="https://m.baidu.com/s?word=SMTP&sa=re_dqa_zy">SMTP<em></em></a> 服务。它的特点包括占用内存少和并发能力强，因此在高负载的情况下表现出色</p><h2 id="ngnix作用"><a href="#ngnix作用" class="headerlink" title="ngnix作用"></a><strong>ngnix作用</strong></h2><p>Http代理，反向代理：作为web服务器最常用的功能之一，尤其是反向代理</p><h3 id="正向代理与反向代理"><a href="#正向代理与反向代理" class="headerlink" title="正向代理与反向代理"></a><strong>正向代理与反向代理</strong></h3><p>阿里云、腾讯云如何搭建局域网</p><p>答:默认情况下我们同一个用户购买几台服务器都是在同一个局域网内，不是同一个用户的服务器不是一个局域网下</p><p>正向代理（vpn）</p><p><img src="https://img.wcw231407.cn/202404180902858.png" alt="image-20240418090251746"></p><p>反向代理</p><p><img src="https://img.wcw231407.cn/202404180903639.png" alt="image-20240418090312499"></p><h3 id="负载均衡"><a href="#负载均衡" class="headerlink" title="负载均衡"></a><strong>负载均衡</strong></h3><p>ngnix提供的是负载均衡策略有两种：内置策略和扩展策略。内置策略为轮询、加权轮询、lp hash；扩展策略，就天马行空，只有你想不到没有它做不到</p><p><strong>轮询</strong></p><p><img src="https://img.wcw231407.cn/202404180903890.png" alt="image-20240418090355781"></p><p>权重都是1，每一个服务器循环请求一次</p><p><strong>加权轮询</strong></p><p><img src="https://img.wcw231407.cn/202404180904050.png" alt="image-20240418090425898"></p><p>权重高的接受更多的请求</p><p><strong>iphash对客户端请求的ip进行hash操作，然后根据hash结果将同一个客户端ip的请求分发给同一台服务器进行处理，可以解决session不问题。</strong></p><blockquote><p>但是如果存session的服务器挂了呢？那么所有信息都挂了，所有我们建议使用redis</p></blockquote><p><strong>动静分离</strong></p><p>动静分离，在我们的软件开发中，有些请求是需要后台处理的，有些请求是不需要经过后台处理（如：css、html、jpg、js等等文件），这些不需要经过后台处理的文件成为静态文件。让动态网站里的动态网址根据一定规则把不变的资源和经常变的资源区分开来，动静资源做好了拆分以后，我们就可以根据静态资源的特点将其做好缓存操作。提高资源响应</p><p><strong>ngnix常用命令</strong></p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/local/ngnix/sbin/</span><br><span class="line">./ngnix  #启动</span><br><span class="line">./ngnix -s stop  #停止</span><br><span class="line">./ngnix -s reload  #重新加载配置文件</span><br><span class="line">ps aux|grep ngnix  #查看ngnix进程</span><br></pre></td></tr></table></figure>]]></content>
+      
+      
+      <categories>
+          
+          <category> nginx </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> nginx </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>面试题-01</title>
       <link href="/2024/04/15/%E9%9D%A2%E8%AF%95%E9%A2%98-01/"/>
       <url>/2024/04/15/%E9%9D%A2%E8%AF%95%E9%A2%98-01/</url>
