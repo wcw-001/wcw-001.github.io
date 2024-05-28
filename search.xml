@@ -4,6 +4,56 @@
   
     
     <entry>
+      <title>上海某公司面试题</title>
+      <link href="/2024/05/28/%E4%B8%8A%E6%B5%B7%E6%9F%90%E5%85%AC%E5%8F%B8%E9%9D%A2%E8%AF%95%E9%A2%98/"/>
+      <url>/2024/05/28/%E4%B8%8A%E6%B5%B7%E6%9F%90%E5%85%AC%E5%8F%B8%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+      
+        <content type="html"><![CDATA[<p>1.自我介绍一下<br>2.谈谈你对我们公司业务的理解<br>3.你能介绍我们公司吗？<br>4.谈谈你的项目？<br>5.你做的怎么接入API的<br>6.如果你感觉不是你心目中的公司你会选择离开吗<br>7.你还有什么想问的吗？<br>这家公司有坑（就这么简单被我忽悠了），就发了offer</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 面试题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 面试题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>杭州某大厂面试</title>
+      <link href="/2024/05/28/%E6%9D%AD%E5%B7%9E%E6%9F%90%E5%A4%A7%E5%8E%82%E9%9D%A2%E8%AF%95/"/>
+      <url>/2024/05/28/%E6%9D%AD%E5%B7%9E%E6%9F%90%E5%A4%A7%E5%8E%82%E9%9D%A2%E8%AF%95/</url>
+      
+        <content type="html"><![CDATA[<p>一面：<br>1.介绍一下自己<br>2.你说你适应能力强，谈谈表现在哪方面<br>3.你能谈谈你身上的优点还有缺点吗？<br>4.你觉得你在学习中遇到最大的挑战是什么？<br>5.令你压力最大的是什么？<br>6.谈谈项目中遇到最大的一个挑战？<br>7.谈谈你的人生规划？<br>二面：<br>1.谈谈你是怎么学的？<br>2.这个项目你是怎么选型的？<br>3.谈谈你的这个项目？<br>4.这个项目是你自己做的，那就介绍一下各个表？<br>5.你知道mysql搜索引擎吗？（就知道InnoDB）<br>6.追问你知道为什么要使用InnoDB吗？（前面我都说了MySQL高级篇还在学习，只是知道InnoDB）<br>7.你数据库是怎么建立索引的？<br>8.你第二个项目运用到了缓存，你说说项目中是怎么使用的？<br>9.你知道redis为什么会比数据库快<br>10.你知道redis是单线程还是多线程？<br>10.你讲讲hashMap底层？（数组+链表+红黑树）<br>11.你知道hashMap是安全的还是不安全的？<br>12.你还有什么要问的吗？</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 面试题 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 面试题 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>北京某公司二面</title>
       <link href="/2024/05/28/%E5%8C%97%E4%BA%AC%E6%9F%90%E5%85%AC%E5%8F%B8%E4%BA%8C%E9%9D%A2/"/>
       <url>/2024/05/28/%E5%8C%97%E4%BA%AC%E6%9F%90%E5%85%AC%E5%8F%B8%E4%BA%8C%E9%9D%A2/</url>
@@ -58,7 +108,7 @@
       <link href="/2024/05/19/%E5%8D%97%E6%98%8C%E6%9F%90%E5%85%AC%E5%8F%B8%E9%9D%A2%E8%AF%95%EF%BC%881%EF%BC%89/"/>
       <url>/2024/05/19/%E5%8D%97%E6%98%8C%E6%9F%90%E5%85%AC%E5%8F%B8%E9%9D%A2%E8%AF%95%EF%BC%881%EF%BC%89/</url>
       
-        <content type="html"><![CDATA[<p>先是做了一套试卷（10来分钟不要就写完了，感觉没有挑战性，就是不知对不对，好久没有学过相关的知识了）<br>做完之后就开始面试</p><h1 id="一面："><a href="#一面：" class="headerlink" title="一面："></a>一面：</h1><p>1.自我介绍<br>2.介绍一下自己做的项目？，<br>3.对集合有哪些认识<br>4.你知道List的哪些类<br>5.你知道ArrayList与LinkedList的区别吗<br>6.介绍一下使用过哪些注解<br>7.@Service、@Controller、@Component的区别？<br>8.Component注解可以代替@Controller<br>9.谈谈你对Spring的理解<br>10.谈谈你对索引的认识<br>11.我们来做一个SQL语句的题目吧（现场撸题，好久没学了，把我吓了一跳，还好没啥问题）<br>12.谈谈项目中你分布式锁的使用<br>13.谈谈你对nacos的认识？<br>14.nacos除了作为注册中心，还可以用作什么<br>15.你在项目中是怎么使用Fegin简化服务间通信（这个估计面试官好奇，才问我的）<br>16.谈谈你对maven的理解<br>17.你熟悉哪些linux命令<br>18.讲讲你是怎么用linux部署项目的<br>19.你了解前端vue，项目的前端是自己写的吗？<br>当然是我自己写的，看着官网写的，虽然写的不美观，但是够用</p><h1 id="二面："><a href="#二面：" class="headerlink" title="二面："></a>二面：</h1><p>给我讲了讲公司要做什么？谈没谈对象？有没有人生规划？家人在哪里？谈了谈平常</p><h1 id="面试感受："><a href="#面试感受：" class="headerlink" title="面试感受："></a>面试感受：</h1><p>态度一定要端正，没有听清楚就再一次问面试官，不懂就不懂没有学过就没有，不要胡搅蛮缠，我遇到的这个面试官挺好的，在我说出自己的见解是错的后耐心为我纠正。</p>]]></content>
+        <content type="html"><![CDATA[<p>先是做了一套试卷（10来分钟不要就写完了，感觉没有挑战性，就是不知对不对，好久没有学过相关的知识了）<br>做完之后就开始面试</p><h1 id="一面："><a href="#一面：" class="headerlink" title="一面："></a>一面：</h1><p>1.自我介绍<br>2.介绍一下自己做的项目？，<br>3.对集合有哪些认识<br>4.你知道List的哪些类<br>5.你知道ArrayList与LinkedList的区别吗<br>6.介绍一下使用过哪些注解<br>7.@Service、@Controller、@Component的区别？<br>8.Component注解可以代替@Controller<br>9.谈谈你对Spring的理解<br>10.谈谈你对索引的认识<br>11.我们来做一个SQL语句的题目吧（现场撸题，好久没学了，把我吓了一跳，还好没啥问题）<br>12.谈谈项目中你分布式锁的使用<br>13.谈谈你对nacos的认识？<br>14.nacos除了作为注册中心，还可以用作什么<br>15.你在项目中是怎么使用Fegin简化服务间通信（这个估计面试官好奇，才问我的）<br>16.谈谈你对maven的理解<br>17.你熟悉哪些linux命令<br>18.讲讲你是怎么用linux部署项目的<br>19.你了解前端vue，项目的前端是自己写的吗？<br>当然是我自己写的，看着官网写的，虽然写的不美观，但是够用</p><h1 id="二面："><a href="#二面：" class="headerlink" title="二面："></a>二面：</h1><p>给我讲了讲公司要做什么？谈没谈对象？有没有人生规划？家人在哪里？谈了谈平常</p><h1 id="面试感受："><a href="#面试感受：" class="headerlink" title="面试感受："></a>面试感受：</h1><p>态度一定要端正，没有听清楚就再一次问面试官，不懂也没有办法（只能默默记下，课后翻阅资料），感谢面试官，在我说出自己的见解是错的后耐心为我纠正。</p>]]></content>
       
       
       <categories>
